@@ -1,0 +1,179 @@
+<html>
+<head>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	{% load static %}
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{#	 <link rel="stylesheet" href="{% static "css/login.css" %}">#}
+	<!--suppress CssUnknownTarget -->
+	<style>
+		@import url('https://fonts.googleapis.com/css?family=Roboto:900i');
+		.btn-floating.btn-large i {
+		    line-height: 56px;
+		}
+
+		.btn-large i {
+		    font-size: 1.6rem;
+		}
+		.btn-floating i {
+		    width: inherit;
+		    display: inline-block;
+		    text-align: center;
+		    color: #fff;
+		    font-size: 1.6rem;
+		    line-height: 40px;
+		}
+		/* Set a style for all buttons */
+		button {
+		    background-color: #4CAF50;
+		    color: white;
+		    padding: 14px 20px;
+		    margin: 8px 0;
+		    border: none;
+		    cursor: pointer;
+		    width: 100%;
+		}
+
+		button:hover {
+		    opacity: 0.8;
+		}
+		:root {
+			--highlight: #F45B69;
+		}
+		*:not(select):not(input):not(option) {
+			color: #EFEFEF;
+		}
+		nav form {
+			margin-bottom: 0;
+			float: right;
+			margin-left: auto;
+		}
+
+		input[type="text"] {
+			color: black;
+		}
+
+		#logout {
+			height: 52px;
+			width: 150px;
+			float: right;
+		}
+
+		button {
+			background-color: var(--highlight) !important;
+			border: none !important;
+		}
+		nav {
+			-webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+		}
+
+		* {
+			font-family: 'Montserrat', sans-serif !important;
+		}
+		#home {
+            height: 65px;
+		}
+
+		span {
+			color: var(--highlight);
+		}
+
+		.navbar-brand {
+			font-family: 'Roboto-BlackItalic';
+			font-weight: 900;
+			font-style: italic;
+		}
+		body {
+		    background: #232328 !important;
+		    color: white !important;
+		}
+		.jumbotron {
+		    background: #1E1E23 !important;
+		}
+		.nav-item, .nav-item:hover {
+			background: transparent !important;
+		}
+		#logout {
+			font-size: 15px;
+			width: auto;
+			height: auto;
+			vertical-align: middle;
+			margin: auto;
+		}
+		nav {
+			z-index: 1;
+		}
+
+		.bg-dark {
+		    background-color: #131318 !important;
+		}
+	</style>
+    <link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+
+	{% block header %}
+	{% endblock %}
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" {# style="background-color: #303035 !important;"#}>
+	{% load static %}
+	<a class="navbar-brand" href="/">
+		{# <img id="home" src="{% static '/img/badelogo.png' %}"/> #}
+		{# Badeli<span>.gg</span> #}
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+	        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+	<ul class="navbar-nav mr-auto">
+		{% with "home timetable" as templates %}
+			{% for template in templates.split %}
+				<li class="nav-item active">
+				<a class="nav-link" href="{% url template %}">{{ template.title }}</a>
+				</li>
+			{% endfor %}
+		{% endwith %}
+			{% if user.is_authenticated %}
+				<!-- if user is logged in then: -->
+			{% else %}
+				<li class="nav-item active">
+				<a class="nav-link" href="/signup">Sign Up</a>
+				</li>
+			{% endif %}
+	</ul>
+	</div>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	</head>
+
+
+	{% if user.is_authenticated %}
+		<!-- if user is logged in then: -->
+		<form method="GET" action="/logout" style="height:auto;">
+			{% csrf_token %}
+			<button type="submit" id="logout" class="btn btn-success">Logout</button>
+		</form>
+	{% else %}
+		<form action="/login/">
+			<button class="btn btn-success" style="width:auto;">Login</button>
+		</form>
+	{% endif %}
+</nav>
+<main role="main" style="margin-top:56px;height:calc(100% - 56px);width:100%;position:relative;padding-top:20px;">
+	{% block content %}
+	{% endblock %}
+</main>
+</body>
+
+</html>
+

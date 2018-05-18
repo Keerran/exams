@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block header %}
+	<style>
+		form > * {
+			display: block;
+			margin: 5px;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<form action="{% url 'add' %}" method="POST" style="margin: 20px !important;">
+		{% csrf_token %}
+		<select name="subject">
+		{% for subject in subjects %}
+			<option style="background-color:{{ subject.colour }}">{{ subject.verbose_name }}</option>
+		{% endfor %}
+		</select>
+		<input type="text" name="paper" placeholder="Paper"/>
+		<input type="date" name="date">
+		<select name="time">
+			<option>09:15</option>
+			<option>13:45</option>
+		</select>
+		<input type="submit" value="Submit">
+	</form>
+{% endblock %}
