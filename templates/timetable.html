@@ -1,69 +1,84 @@
 {% extends "sidebar.html" %}
+{% block title %}Timetable{% endblock %}
 {% block head %}
 	<style>
+		.day, .days {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
 		.day-label {
 			text-align: center;
 			font-family: "Montserrat ExtraBold" !important;
 			cursor: default;
 		}
+
 		.days {
-			display:grid;
-		    justify-content: center;
-			margin:auto;
-			grid-template-columns: repeat(7,50px);
+			display: grid;
+			justify-content: center;
+			margin: auto;
+			grid-template-columns: repeat(7, 50px);
 			grid-column-gap: 10px;
 			grid-row-gap: 10px;
 			width: fit-content;
 			padding: 10px;
-			border: 1px #707075 solid;
+			border: var(--border);
 		}
+
 		.day {
 			width: 50px;
 			height: 50px;
 			/*border: 1px #EFEFEF solid;*/
 			text-align: center;
-			line-height:50px;
-			border-radius:50%;
+			line-height: 50px;
+			border-radius: 50%;
 			-moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
+			-webkit-border-radius: 50%;
 			box-sizing: border-box;
 			border: 0;
 		}
 
-		.day{
+		.day {
 			cursor: default;
 			display: inline-block;
-            vertical-align: middle;
+			vertical-align: middle;
 		}
+
 		.True {
 			background: #EFEFEF !important;
 			border-color: black;
 		}
+
 		.True {
 			color: black !important
 		}
 
-		div[id|=exam_day] {
-			cursor: pointer;
-		}
 	</style>
 	<script>
-            $.fn.extend({
-                disableSelection: function() {
-                    this.each(function() {
-                        if (typeof this.onselectstart != 'undefined') {
-                            this.onselectstart = function() { return false; };
-                        } else if (typeof this.style.MozUserSelect != 'undefined') {
-                            this.style.MozUserSelect = 'none';
-                        } else {
-                            this.onmousedown = function() { return false; };
-                        }
-                    });
-                }
-            });
-			$(document).ready(function() {
-				$(".day,.day-label").disableSelection();
-			});
+        $.fn.extend({
+            disableSelection: function () {
+                this.each(function () {
+                    if (typeof this.onselectstart != 'undefined') {
+                        this.onselectstart = function () {
+                            return false;
+                        };
+                    } else if (typeof this.style.MozUserSelect != 'undefined') {
+                        this.style.MozUserSelect = 'none';
+                    } else {
+                        this.onmousedown = function () {
+                            return false;
+                        };
+                    }
+                });
+            }
+        });
+        $(document).ready(function () {
+            $(".day,.day-label").disableSelection();
+        });
 	</script>
 {% endblock %}
 {% block selector %}'.days > div[id|="exam_day"]'{% endblock %}
@@ -72,17 +87,12 @@
 	<div class="days" aria-selected="false" aria-readonly="true">
 		{% with "S M T W T F S" as weekdays %}
 			{% for weekday in weekdays.split %}
-				<div class="day-label" aria-selected="false" aria-readonly="true">{{ weekday }}</div>
+				<div class="day-label" aria-readonly="true">{{ weekday }}</div>
 			{% endfor %}
 		{% endwith %}
 		{% for day in days %}
-			<div id="{{ day.4 }}-{{ day.3 }}" aria-selected="false" aria-readonly="true" class="day {{ day.2 }}" unselectable="" style="{{ day.1 }}">{{ day.0 }}</div>
+			<div id="{{ day.4 }}-{{ day.3 }}" aria-readonly="true" class="day {{ day.2 }}"
+			     style="{{ day.1 }}">{{ day.0 }}</div>
 		{% endfor %}
-{#	</div>#}
-{#	<div id="sidebar">#}
-{#		<div id="colour"></div>#}
-{#		<div id="subject"></div>#}
-{#		<div id="paper"></div>#}
-{#		<div id="date"></div>#}
-{#	</div>#}
+	</div>
 {% endblock %}

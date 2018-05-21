@@ -6,45 +6,51 @@
 	{% load static %}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-{#	 <link rel="stylesheet" href="{% static "css/login.css" %}">#}
+	{#	 <link rel="stylesheet" href="{% static "css/login.css" %}">#}
 	<!--suppress CssUnknownTarget -->
 	<style>
 		@import url('https://fonts.googleapis.com/css?family=Roboto:900i');
+
 		.btn-floating.btn-large i {
-		    line-height: 56px;
+			line-height: 56px;
 		}
 
 		.btn-large i {
-		    font-size: 1.6rem;
+			font-size: 1.6rem;
 		}
+
 		.btn-floating i {
-		    width: inherit;
-		    display: inline-block;
-		    text-align: center;
-		    color: #fff;
-		    font-size: 1.6rem;
-		    line-height: 40px;
+			width: inherit;
+			display: inline-block;
+			text-align: center;
+			color: #fff;
+			font-size: 1.6rem;
+			line-height: 40px;
 		}
+
 		/* Set a style for all buttons */
-		button {
-		    background-color: #4CAF50;
-		    color: white;
-		    padding: 14px 20px;
-		    margin: 8px 0;
-		    border: none;
-		    cursor: pointer;
-		    width: 100%;
+		nav button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			border: none;
+			cursor: pointer;
+			width: 100%;
 		}
 
 		button:hover {
-		    opacity: 0.8;
+			opacity: 0.8;
 		}
+
 		:root {
 			--highlight: #F45B69;
+			--border: 1px #707075 solid;
 		}
+
 		*:not(select):not(input):not(option) {
 			color: #EFEFEF;
 		}
+
 		nav form {
 			margin-bottom: 0;
 			float: right;
@@ -65,6 +71,7 @@
 			background-color: var(--highlight) !important;
 			border: none !important;
 		}
+
 		nav {
 			-webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
 			-moz-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
@@ -72,10 +79,11 @@
 		}
 
 		* {
-			font-family: 'Montserrat', sans-serif !important;
+			font-family: 'Montserrat', sans-serif;
 		}
+
 		#home {
-            height: 65px;
+			height: 65px;
 		}
 
 		span {
@@ -87,16 +95,20 @@
 			font-weight: 900;
 			font-style: italic;
 		}
+
 		body {
-		    background: #232328 !important;
-		    color: white !important;
+			background: #232328 !important;
+			color: white !important;
 		}
+
 		.jumbotron {
-		    background: #1E1E23 !important;
+			background: #1E1E23 !important;
 		}
+
 		.nav-item, .nav-item:hover {
 			background: transparent !important;
 		}
+
 		#logout {
 			font-size: 15px;
 			width: auto;
@@ -104,18 +116,19 @@
 			vertical-align: middle;
 			margin: auto;
 		}
+
 		nav {
 			z-index: 1;
 		}
 
 		.bg-dark {
-		    background-color: #131318 !important;
+			background-color: #131318 !important;
 		}
 	</style>
-    <link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
+	<link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+	{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-
+	<title>{% block title %}Exams{% endblock %}</title>
 
 	{% block header %}
 	{% endblock %}
@@ -134,22 +147,20 @@
 		<span class="navbar-toggler-icon"></span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarCollapse">
-	<ul class="navbar-nav mr-auto">
-		{% with "home timetable" as templates %}
-			{% for template in templates.split %}
-				<li class="nav-item active">
-				<a class="nav-link" href="{% url template %}">{{ template.title }}</a>
-				</li>
-			{% endfor %}
-		{% endwith %}
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url "home" %}">Home</a>
+			</li>
 			{% if user.is_authenticated %}
-				<!-- if user is logged in then: -->
+				<li class="nav-item active">
+					<a class="nav-link" href="{% url "timetable" %}">Timetable</a>
+				</li>
 			{% else %}
 				<li class="nav-item active">
-				<a class="nav-link" href="/signup">Sign Up</a>
+					<a class="nav-link" href="/signup">Sign Up</a>
 				</li>
 			{% endif %}
-	</ul>
+		</ul>
 	</div>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">

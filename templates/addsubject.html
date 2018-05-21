@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Add Subject{% endblock %}
+{% block header %}
+	{% load static %}
+	<script src="{% static "js/jquery.minicolors.min.js" %}"></script>
+	<script>
+		$(document).ready(function(){
+			$('.minicolors').minicolors({
+			    theme: "bootstrap"
+			});
+		});
+	</script>
+	<link rel="stylesheet" href="{% static "css/jquery.minicolors.css" %}"/>
+	<style>
+		form > * {
+			display: block;
+			margin: 5px;
+		}
+	</style>
+	<link rel="stylesheet" href="{% static "css/forms.css" %}" %}"/>
+{% endblock %}
+{% block content %}
+	<form method="POST">
+		{% csrf_token %}
+		<h1>Add Subject</h1>
+		<div class="form-group">
+			<label for="name">Name</label>
+			<input id="name" class="form-control" name="name" type="text"/>
+		</div>
+		<div class="form-group">
+			<label for="verbose_name">Verbose Name</label>
+			<input id="verbose_name" class="form-control" name="v_name" type="text"/>
+		</div>
+		<div class="form-group">
+			<label for="colour">Colour</label>
+			<input type="text" name="colour" class="minicolors form-control" data-control="hue" value="#ff6161">
+		</div>
+		<div class="form-group">
+			<input class="form-control" type="submit" value="Submit">
+		</div>
+	</form>
+{% endblock %}

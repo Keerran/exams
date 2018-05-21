@@ -1,29 +1,52 @@
-from django.contrib.auth.models import User
+import datetime
+
+import pytz
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.timezone import make_naive
+from timezone_field import TimeZoneField
+
+
+class User(AbstractUser):
+    timezone = TimeZoneField()
+
+    def natural_key(self):
+        return self.id, self.timezone.zone
+
+    def save(self, *args, **kwargs):
+        create = not self.pk
+        super().save(*args, **kwargs)
+        if create:
+            Exam.objects.create(subject_id="Results Day",
+                                date=datetime.datetime(2018, 8, 16, 8, 15),
+                                paper="",
+                                user=self,
+                                duration=90
+                                )
 
 
 # Create your models here.
 class Subject(models.Model):
-	name = models.CharField(primary_key=True, max_length=100)
-	verbose_name = models.CharField(max_length=100)
-	colour = models.CharField(max_length=6)
+    name = models.CharField(primary_key=True, max_length=100)
+    verbose_name = models.CharField(max_length=100)
+    colour = models.CharField(max_length=6)
 
-	def natural_key(self):
-		return self.verbose_name, self.colour
+    def natural_key(self):
+        return self.verbose_name, self.colour
 
-	def __str__(self):
-		return self.verbose_name
+    def __str__(self):
+        return self.verbose_name
 
 
 class Exam(models.Model):
-	subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-	paper = models.CharField(max_length=100)
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	date = models.DateTimeField()
-	duration = models.PositiveSmallIntegerField()
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    paper = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField()
+    duration = models.PositiveSmallIntegerField()
 
-	def __str__(self):
-		return self.subject.name + " " + self.paper
+    def __str__(self):
+        return self.subject.name + " " + self.paper
 
-	class Meta:
-		ordering = ("date",)
+    class Meta:
+        ordering = ("date",)

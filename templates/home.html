@@ -4,57 +4,169 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!--Import materialize.css-->
 	{% load static %}
-{#	<link type="text/css" rel="stylesheet" href='{% static "css/materialize.min.css" %}' media="screen,projection"/>#}
+	{#	<link type="text/css" rel="stylesheet" href='{% static "css/materialize.min.css" %}' media="screen,projection"/>#}
+	<script>
+	$(function() {
+	$(".fab").hover(function(){
+		$(".fab_text",this).css({"display": "block"})
+	},function() {
+		$(".fab_text",this).css({"display": "none"})
+	});
+	$(".fab-children").hover(function() {
+			$(".fab-children").css({"height":(parseInt($("#masterfab").css("bottom")) + parseInt($("#masterfab").outerHeight()) + 55 * 1- $(".fab.child").outerHeight()) + "px"});
+			$(".fab.child").each(function() {
+				$(this)
+					.stop()
+					.show()
+					.animate({
+						bottom	: (parseInt($("#masterfab").css("bottom")) + parseInt($("#masterfab").outerHeight()) + 55 * $(this).data("subitem") - $(".fab.child").outerHeight()) + "px",
+						opacity	: 1
+					},125);
+			});
+		}, function() {
+			$(".fab-children").css({"height":"56px"});
+			$(".fab.child")
+				.stop()
+				.animate({
+					bottom	: $("#masterfab").css("bottom"),
+					opacity	: 0
+				},125,function(){
+					$(this).hide();
+				});
+	});
+});
+	</script>
+	<style>
+p.fab_text {
+  margin: 14px 0;
+  display: none;
+  background-color: #212121;
+  border-radius: 3px;
+  color: #fff;
+  right: 60px;
+  font-size: 14px;
+  opacity: .8;
+  padding: 5px 9px;
+  position: absolute;
+  top: -6px;
+  white-space: nowrap;
+}
+
+#masterfab p {
+  right: 75px;
+  opacity: .8;
+  top: 2px;
+}
+#masterfab i {
+  padding: 16px;
+}
+.fab.child > i {
+  padding: 8px;
+}
+
+.fab-children {
+  position: fixed;
+  bottom: 42px;
+  right: 42px;
+  width: 56px;
+}
+
+.fab-children a {
+	cursor: pointer;
+}
+
+.fab {
+  background: var(--highlight);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  vertical-align: middle;
+  text-align: center;
+  color: #FFF;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5), 3px 3px 3px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  bottom: 42px;
+  right: 42px;
+  display: inline-block;
+}
+.fab:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.14), 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+.fab span {
+  vertical-align: middle;
+}
+
+.fab.child {
+  right: calc(154px/3);
+  width: auto;
+  height: auto;
+  display: none;
+  opacity: 0;
+  font-size: 2em;
+}
+
+	</style>
 	<style>
 		.exams {
 			width: 600px;
-			margin:auto;
+			margin: auto;
 			display: none;
 		}
+
 		.exam * {
 			font-family: Montserrat !important;
 		}
+
 		.subject {
 			font-family: "Montserrat SemiBold" !important;
 			font-size: 2.5rem;
 		}
+
 		.paper {
 			font-size: 2rem;
 		}
+
 		.exam,
-		.fixed-action-btn a{
-			-webkit-box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.75);
-			-moz-box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.75);
-			box-shadow: 0px 5px 25px 0px rgba(0,0,0,0.75);
+		.fixed-action-btn a {
+			-webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
 		}
+
 		.exam {
 			display: inline-flex;
 			width: 100%;
 			margin: 10px;
 		}
+
 		.exam > :first-child {
 			width: 70%;
 			margin: 5px;
 		}
+
 		.exam > :last-child {
 
 			width: 30%;
-			background: rgba(0,0,0,0.4);
+			background: rgba(0, 0, 0, 0.4);
 			padding-top: 5px;
 			padding-bottom: 5px;
 			text-align: center;
 		}
+
 		.relative {
 			font-size: 1.2rem;
 		}
+
 		.relative span {
 			font-size: 2rem;
 		}
+
 		.hover {
 			position: absolute;
 			background: #000000;
 			padding: 5px;
-			display:none;
+			display: none;
 		}
 
 		.hover:after {
@@ -84,97 +196,130 @@
 		}
 
 		::-webkit-scrollbar {
-		    width: 12px;
-		    background-color: #232328;
+			width: 12px;
+			background-color: #232328;
 		}
 
 		::-webkit-scrollbar-thumb {
-		    min-height: 28px !important;
-	        background: rgb(179, 179, 179) !important;
+			min-height: 28px !important;
+			background: rgb(179, 179, 179) !important;
 		}
+
 		::-webkit-scrollbar-track {
-		    background-color: #232328;
+			background-color: #232328;
 		}
+
 		::-webkit-scrollbar-corner {
 			background: rgb(237, 237, 237) !important;
 		}
+
 		html {
 			overflow-y: scroll;
 		}
+
+		h1 {
+			font-family: "Montserrat SemiBold";
+			text-decoration: underline;
+			text-align: center;
+			font-size: 50px;
+			margin-bottom: .5em;
+		}
 	</style>
 	<script>
-	$(function() {
+		names = {"pending": "Upcoming Exams", "done": "Finished Exams"}
+        $(function () {
 
-		$(".exam > .date-info").hover(function() {
-		    $(".hover", $(this).parents(".exam")).css({"display":"block"});
+            $(".exam > .date-info").hover(function () {
+                $(".hover", $(this).parents(".exam")).css({"display": "block"});
 
-		},function() {
-		    $(".hover", $(this).parents(".exam")).css({"display":"none"});
-		});
-	});
+            }, function () {
+                $(".hover", $(this).parents(".exam")).css({"display": "none"});
+            });
+        });
 
-	function runClick(id, other) {
-			document.getElementById(id).classList.add("visible");
-			document.getElementById(id + "Button").classList.add("visibleButton");
-			$("#" + id + "Button").prop('disabled', true);
-			document.getElementById(other).classList.remove("visible");
-			document.getElementById(other + "Button").classList.remove("visibleButton");
-			$("#" + other + "Button").prop('disabled', false);
-	}
+        function runClick(id, other) {
+            document.getElementById("timeframe").textContent = names[id];
+            document.getElementById(id).classList.add("visible");
+            document.getElementById(id + "Button").classList.add("visibleButton");
+            $("#" + id + "Button").prop('disabled', true);
+            document.getElementById(other).classList.remove("visible");
+            document.getElementById(other + "Button").classList.remove("visibleButton");
+            $("#" + other + "Button").prop('disabled', false);
+        }
 	</script>
 {% endblock %}
 {% block body %}
-<div id="statButtons">
-	<button id="pendingButton" onclick="runClick('pending','done')" disabled class="statButton visibleButton btn">Upcoming</button>
-	<button id="doneButton" onclick="runClick('done','pending')" class="statButton btn">Done</button>
-</div>
-<div style="position: relative; margin:auto; width:600px;">
-	<div id="pending" class="exams visible" style="position:absolute">
-	{% for data in pending %}
-		{% with data.0 as exam %}
-			<div id="exam-{{ exam.id }}" class="exam" style="position: relative; background: #{{ exam.subject.colour }}">
-				<div>
-					<div class="subject">{{ exam.subject.verbose_name }}</div>
-					<div class="paper">{{ exam.paper }}</div>
-				</div>
-				<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
-					{{ data.3 }}
-				</div>
-				<div class="date-info">
-					<div class="relative">{{ data.2|safe }}</div>
+	<h1 id="timeframe">Upcoming Exams</h1>
+	<div id="statButtons">
+		<button id="pendingButton" onclick="runClick('pending','done')" disabled class="statButton visibleButton btn">
+			Upcoming
+		</button>
+		<button id="doneButton" onclick="runClick('done','pending')" class="statButton btn">Finished</button>
+	</div>
+	<div style="position: relative; margin:auto; width:600px;">
+		<div id="pending" class="exams visible" style="position:absolute">
+			{% for data in pending %}
+				{% with data.0 as exam %}
+					<div id="exam-[{{ exam.id }}]" class="exam"
+					     style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
+						<div>
+							<div class="subject">{{ exam.subject.verbose_name }}</div>
+							<div class="paper">{{ exam.paper }}</div>
+						</div>
+						<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
+							{{ data.3 }}
+						</div>
+						<div class="date-info">
+							<div class="relative">{{ data.2|safe }}</div>
 
-					<div class="date">{{ data.1 }}</div>
-				</div>
-			</div>
-		{% endwith %}
-	{% endfor %}
-</div>
-	<div id="done" class="exams" style="position:absolute">
-	{% for data in done %}
-		{% with data.0 as exam %}
-			<div class="exam" style="position: relative; background: #{{ exam.subject.colour }}">
-				<div>
-					<div class="subject">{{ exam.subject.verbose_name }}</div>
-					<div class="paper">{{ exam.paper }}</div>
-				</div>
-				<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
-					{{ data.3 }}
-				</div>
-				<div class="date-info">
-					<div class="relative">{{ data.2|safe }}</div>
+							<div class="date">{{ data.1 }}</div>
+						</div>
+					</div>
+				{% endwith %}
+			{% endfor %}
+		</div>
+		<div id="done" class="exams" style="position:absolute">
+			{% for data in done %}
+				{% with data.0 as exam %}
+					<div class="exam" style="position: relative; background: #{{ exam.subject.colour }}">
+						<div>
+							<div class="subject">{{ exam.subject.verbose_name }}</div>
+							<div class="paper">{{ exam.paper }}</div>
+						</div>
+						<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
+							{{ data.3 }}
+						</div>
+						<div class="date-info">
+							<div class="relative">{{ data.2|safe }}</div>
 
-					<div class="date">{{ data.1 }}</div>
-				</div>
-			</div>
-		{% endwith %}
-	{% endfor %}
+							<div class="date">{{ data.1 }}</div>
+						</div>
+					</div>
+				{% endwith %}
+			{% endfor %}
+		</div>
+	</div>
+	{#<div class="fixed-action-btn">#}
+	{#  <a class="btn-floating btn-large" style="background-color: var(--highlight);" href="/add/">#}
+	{#    <i class="large material-icons" unselectable="on" style="font-family: 'Material Icons';font-size: 40px;">+</i>#}
+	{#  </a>#}
+	{#</div>#}
+	<div class="fab-children">
+	<!--<div class="fab child" data-subitem="1"><i>C</i></div>
+	<div class="fab child" data-subitem="2"><i>B</i></div>-->
+	<a href="{% url "addsubject" %}">
+		<div class="fab child" data-subitem="1">
+			<p class="fab_text">Add Subject</p>
+			<i class="action-button__icon material-icons">chrome_reader_mode</i>
+		</div>
+	</a>
+	<a href="{% url "addexam" %}">
+		<div class="fab" id="masterfab">
+			<p class="fab_text">Add Exam</p>
+			<i class="material-icons">add</i>
+		</div>
+	</a>
 </div>
-</div>
-{#<div class="fixed-action-btn">#}
-{#  <a class="btn-floating btn-large" style="background-color: var(--highlight);" href="/add/">#}
-{#    <i class="large material-icons" unselectable="on" style="font-family: 'Material Icons';font-size: 40px;">+</i>#}
-{#  </a>#}
-{#</div>#}
 {% endblock %}
 {% block selector %}'.exam'{% endblock %}
 {% block nullSelector %}'0'{% endblock %}

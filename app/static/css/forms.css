@@ -1,0 +1,12 @@
+main form {
+    border: var(--border);
+    margin: auto;
+    width: 600px;
+    padding: 10px;
+}
+
+form [type="submit"] {
+    background: var(--highlight);
+    border: none;
+    color: white;
+}

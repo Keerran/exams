@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}Login{% endblock %}
-
+{% block header %}
+	{% load static %}
+	<link rel="stylesheet" href="{% static "css/forms.css" %}"/>
+{% endblock %}
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+	{% load crispy_forms_tags %}
+	<form method="post">
+		<h1>Login</h1>
+		{% csrf_token %}
+		{{ form|crispy }}
+		<div class="form-group">
+			<button class="form-control" type="submit">Login</button>
+		</div>
+	</form>
 {% endblock %}

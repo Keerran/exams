@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% block header %}
+	{% load static %}
+	<script src="{% static 'js/moment.js' %}"></script>
+	<script src="{% static 'js/moment-timezone.js' %}"></script>
 	<style>
 		#sidebar {
 			margin-left: -500px;
 			transition: 0.3s;
-			position:fixed;
+			position: fixed;
 			background: #121217;
 			width: 500px;
 			height: 100%;
@@ -15,8 +18,8 @@
 
 		.in {
 			-webkit-box-shadow: -5px 0 25px 0px rgba(0, 0, 0, 0.75);
-            -moz-box-shadow: -5px 0 25px 0px rgba(0, 0, 0, 0.75);
-            box-shadow: -5px 0px 25px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: -5px 0 25px 0px rgba(0, 0, 0, 0.75);
+			box-shadow: -5px 0px 25px 0px rgba(0, 0, 0, 0.75);
 		}
 
 		.dark-scroll::-webkit-scrollbar-track {
@@ -26,7 +29,8 @@
 		#sidebar > div {
 			width: 500px;
 			height: 1em;
-			padding-left:5px;
+			padding-left: 5px;
+			margin-bottom: 8px;
 		}
 
 		#sidebar > #subject {
@@ -34,12 +38,15 @@
 			font-size: 3rem;
 			font-weight: bold;
 		}
+
 		#sidebar > #paper {
 			font-size: 2.5rem;
 		}
-        #sidebar > #date {
-	        font-size: 2rem;
-        }
+
+		#sidebar > #date {
+			font-size: 2rem;
+		}
+
 		#sidebar > div:first-child {
 			height: 500px;
 		}
@@ -47,50 +54,54 @@
 	{% block head %}
 	{% endblock %}
 	<script>
-		var selector = {% block selector %} {% endblock %}
-		var nullSelector = {% block nullSelector %} {% endblock %}
-		function pad(n, width, z) {
-		  z = z || '0';
-		  n = n + '';
-		  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-		}
-		function format(date) {
-		    return pad(date.getHours(),2) + ":" + date.getMinutes();
-		}
-		var e = '{{ exams|escapejs }}';
-		var exams = JSON.parse(e);
-		$(document).ready(function() {
-			$(selector).click(function(event) {
-			    event.stopPropagation();
-			    $("#sidebar").css({"margin-left" : "0"});
-				$("#sidebar").addClass("in");
-			    var pks = $(this).attr("id").split("-")[1].split(",");
-			    var dim = $(this)[0].getBoundingClientRect();
-			    var x = event.clientX - dim.left;
-			    var index = Math.floor((pks.length * x)/dim.width);
-			    for(var key in exams) {
-			        var exam = exams[key];
-			        if(exam["pk"] == pks[index])
-			        {
-			            exam = exam["fields"];
-			            $("#colour").css({"background":"#" + exam["subject"][1]});
-			            $("#subject").text(exam["subject"][0]);
-				        $("#paper").text(exam["paper"]);
-						var date = new Date(exam["date"]);
-						var start = format(date);
-				        date.setMinutes(date.getMinutes() + exam["duration"]);
-				        var end = format(date);
-						$("#date").text(start+" \u2192 "+end);
-			            return;
-			        }
-			    }
-			});
-			$(nullSelector).click(function(e) {e.stopPropagation();});
-			$(document).click(function() {
-			    $("#sidebar").css({"margin-left" : "-500px"});
-			    $("#sidebar").removeClass("in");
-			});
-		});
+        var selector = {% block selector %} {% endblock %}
+        var nullSelector = {% block nullSelector %} {% endblock %}
+            function pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            }
+
+        function format(date) {
+            return pad(date.getHours(), 2) + ":" + date.getMinutes();
+        }
+
+        var e = '{{ exams|escapejs }}';
+        var exams = JSON.parse(e);
+        $(document).ready(function () {
+            $(selector).css({"cursor": "pointer"});
+            $(selector).click(function (event) {
+                event.stopPropagation();
+                $("#sidebar").css({"margin-left": "0"});
+                $("#sidebar").addClass("in");
+                var pks = JSON.parse($(this).attr("id").split("-")[1]);
+                var dim = $(this)[0].getBoundingClientRect();
+                var x = event.clientX - dim.left;
+                var index = Math.floor((pks.length * x) / dim.width);
+                for (var key in exams) {
+                    var exam = exams[key];
+                    if (exam["pk"] == pks[index]) {
+                        exam = exam["fields"];
+                        $("#colour").css({"background": "#" + exam["subject"][1]});
+                        $("#subject").text(exam["subject"][0]);
+                        $("#paper").text(exam["paper"]);
+                        var date = moment.tz(exam["date"], exam["user"][1]);
+                        var start = date.format("HH[:]mm");
+                        date.add(exam["duration"], "minutes");
+                        var end = date.format("HH[:]mm");
+                        $("#date").text(start + " \u2192 " + end);
+                        return;
+                    }
+                }
+            });
+            $(nullSelector + ",#sidebar").click(function (e) {
+                e.stopPropagation();
+            });
+            $(document).click(function () {
+                $("#sidebar").css({"margin-left": "-500px"});
+                $("#sidebar").removeClass("in");
+            });
+        });
 	</script>
 {% endblock %}
 {% block content %}
