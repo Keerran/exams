@@ -1,0 +1,19 @@
+{% extends "tests.html" %}
+{% block title %}{{ subject }}{% endblock %}
+{% block header %}
+	{{ block.super }}
+	<style>
+		main form {
+			width: 200px;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	{% for paper in papers %}
+		<form action="{% url "exam" slug=paper.id %}">
+			<button class="subject">
+				{{ paper.paper }}
+			</button>
+		</form>
+	{% endfor %}
+{% endblock %}

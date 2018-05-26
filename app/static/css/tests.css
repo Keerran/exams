@@ -1,0 +1,30 @@
+
+main form {
+    display: inline-block;
+    position: relative;
+    margin-left: 20px;
+    vertical-align: middle;
+    height: 50px;
+    width: 250px;
+    text-align:left;
+    padding-left: 0;
+    line-height: 50px;
+    background: #121217 !important;
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+}
+
+main button {
+    padding-left: 0;
+    padding-right: 20px;
+    width: 100%;
+    background: transparent !important;
+}
+
+#colour {
+    float: left;
+    height: 40px;
+    width: 40px;
+    margin: 5px 20px 5px 5px;
+}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Exam{% endblock %}
+{% block header %}
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		main {
+			padding: 10px;
+		}
+		table {
+			width: 900px !important;
+		}
+		form {
+			margin: 0;
+		}
+		tfoot td:not(:last-child) {
+			padding:0 !important;
+		}
+
+		table th:last-child {
+			border:none !important;
+			padding: 0 !important;
+		}
+
+		table td:last-child {
+			width: 90px !important;
+			padding: 0 !important;
+		}
+
+		button {
+			height: 50px;
+			width: 90px;
+		}
+
+		tfoot input {
+			height:51px;
+			width: 100%;
+		}
+	</style>
+	{% load static %}
+{% endblock %}
+{% block content %}
+	<h1>{{ object.subject }}: {{ object.paper }}</h1>
+	{% load app_tags %}
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th scope="col">Score / {{ object.max_score }}</th>
+				<th scope="col">Percentage</th>
+				<th scope="col">Minutes Left</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for test in tests %}
+				<tr>
+					<td>{{ test.score }}</td>
+					<td>{{ test.score|percent:object.max_score }}</td>
+					<td>{{ test.minutes_left }}</td>
+					<td><form class="del" id="{{ test.pk }}" action="javascript:;">
+						<button name="pk" type="submit"><i class="material-icons">delete</i></button>
+					</form></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		<tfoot>
+			<form id="add" action="javascript:;">
+				<tr>
+					<td><input id="score" type="number" required/></td>
+					<td></td>
+					<td><input id="minutes_left" type="number" required/></td>
+					<td><button type="submit"><i class="material-icons">note_add</i></button></td>
+				</tr>
+			</form>
+		</tfoot>
+	</table>
+	{% csrf_token %}
+	<script type="text/javascript">
+	// using jQuery
+	var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+	</script>
+	<script src="{% static "js/exam.js" %}"></script>
+{% endblock %}

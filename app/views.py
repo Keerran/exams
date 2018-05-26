@@ -6,16 +6,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
 from django.db.models import Min, Max
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.timezone import make_aware, is_naive, make_naive
 from django.views import View
+from django.views.generic import DetailView
 
 from app.forms import SignUpForm
-from app.models import Subject, Exam
+from app.models import Subject, Exam, Test
 
 
 class Signup(View):
@@ -86,7 +88,7 @@ def home(request):
 @method_decorator(login_required, name='dispatch')
 class Timetable(View):
     def get(self, request):
-        e = Exam.objects.filter(user=request.user).exclude(subject__name="Results Day")
+        e = Exam.get_user_subjects(request.user)
         start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date()
         end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date()
         padding = (start_date.weekday() + 1) % 6
@@ -138,7 +140,6 @@ class AddExam(View):
         subject = Subject.objects.get(pk=request.POST["subject"])
         paper = request.POST["paper"]
         user = request.user
-        print(request.POST)
         dt = "{0} {1}".format(request.POST["date"], request.POST["time"])
         dt = datetime.datetime.strptime(dt, "%Y-%m-%d %H:%M")
         Exam.objects.create(subject=subject, paper=paper, user=user, date=dt).save()
@@ -151,11 +152,64 @@ class AddSubject(View):
         return render(request, "addsubject.html")
 
     def post(self, request):
-        name = request.POST["name"]
-        verbose_name = request.POST["v_name"]
         colour = request.POST["colour"].strip("#")
-        x = Subject.objects.create(name=name,
-                                   verbose_name=verbose_name,
-                                   colour=colour)
-        print(x)
+        Subject.objects.create(name=request.POST["name"],
+                               verbose_name=request.POST["v_name"],
+                               colour=colour).save()
         return redirect("home")
+
+
+class Tests(View):
+    def get(self, request):
+        exams = Exam.get_user_subjects(request.user).order_by()\
+                    .values_list("subject", "subject__verbose_name", "subject__colour")\
+                    .distinct()
+        return render(request, "tests.html", context={
+            "papers": exams,
+        })
+
+
+class SubjectTests(DetailView):
+    model = Subject
+    slug_field = "name"
+    template_name = "subject.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["papers"] = Exam.objects.filter(subject=self.object, user=self.request.user)
+        return context
+
+
+class ExamTests(DetailView):
+    model = Exam
+    slug_field = "id"
+    template_name = "exam.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["tests"] = Test.objects.filter(exam__user=self.request.user)
+
+        return context
+
+    def post(self, request, slug):
+        obj = get_object_or_404(Exam, pk=slug)
+        score = int(request.POST["score"])
+        minutes_left = int(request.POST["minutes_left"])
+        t = Test.objects.create(exam=obj, score=score, minutes_left=minutes_left)
+        t.save()
+        percentage = round((t.score / t.exam.max_score) * 100)
+        return JsonResponse({
+            "pk": t.pk,
+            "score": t.score,
+            "percentage": percentage,
+            "minutes_left": t.minutes_left,
+        })
+
+
+class DeleteTest(View):
+    def post(self, request):
+        obj = Test.objects.get(pk=self.request.POST["pk"])
+        obj.delete()
+
+        return JsonResponse({})

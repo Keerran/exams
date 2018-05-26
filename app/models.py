@@ -44,9 +44,21 @@ class Exam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField()
     duration = models.PositiveSmallIntegerField()
+    max_score = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return self.subject.name + " " + self.paper
 
     class Meta:
         ordering = ("date",)
+
+    @classmethod
+    def get_user_subjects(cls, user):
+        return cls.objects.filter(user=user).exclude(subject__name="Results Day")
+
+
+class Test(models.Model):
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField()
+    minutes_left = models.SmallIntegerField()
+    date = models.DateField(auto_now_add=True)

@@ -81,7 +81,7 @@
         });
 	</script>
 {% endblock %}
-{% block selector %}'.days > div[id|="exam_day"]'{% endblock %}
+{% block selector %}'.days > #exam_day'{% endblock %}
 {% block nullSelector %}'.True'{% endblock %}
 {% block body %}
 	<div class="days" aria-selected="false" aria-readonly="true">
@@ -91,7 +91,7 @@
 			{% endfor %}
 		{% endwith %}
 		{% for day in days %}
-			<div id="{{ day.4 }}-{{ day.3 }}" aria-readonly="true" class="day {{ day.2 }}"
+			<div id="{{ day.4 }}" aria-readonly="true" data-exams="{{ day.3 }}" class="day {{ day.2 }}"
 			     style="{{ day.1 }}">{{ day.0 }}</div>
 		{% endfor %}
 	</div>

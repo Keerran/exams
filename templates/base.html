@@ -45,6 +45,7 @@
 		:root {
 			--highlight: #F45B69;
 			--border: 1px #707075 solid;
+			--shadow: -5px 0px 25px 0px rgba(0, 0, 0, 0.75);
 		}
 
 		*:not(select):not(input):not(option) {
@@ -73,9 +74,9 @@
 		}
 
 		nav {
-			-webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
-			-moz-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
-			box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.75);
+			-moz-box-shadow: var(--shadow);
+			-webkit-box-shadow: var(--shadow);
+			box-shadow: var(--shadow);
 		}
 
 		* {
@@ -126,6 +127,8 @@
 		}
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
 	{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<title>{% block title %}Exams{% endblock %}</title>
@@ -152,9 +155,13 @@
 				<a class="nav-link" href="{% url "home" %}">Home</a>
 			</li>
 			{% if user.is_authenticated %}
-				<li class="nav-item active">
-					<a class="nav-link" href="{% url "timetable" %}">Timetable</a>
-				</li>
+				{% with "timetable tests" as templates %}
+					{% for template in templates.split %}
+						<li class="nav-item active">
+						<a class="nav-link" href="{% url template %}">{{ template.title }}</a>
+						</li>
+					{% endfor %}
+				{% endwith %}
 			{% else %}
 				<li class="nav-item active">
 					<a class="nav-link" href="/signup">Sign Up</a>
@@ -180,7 +187,7 @@
 		</form>
 	{% endif %}
 </nav>
-<main role="main" style="margin-top:56px;height:calc(100% - 56px);width:100%;position:relative;padding-top:20px;">
+<main id="main" role="main" style="margin-top:56px;height:calc(100% - 56px);width:100%;position:relative;padding-top:20px;">
 	{% block content %}
 	{% endblock %}
 </main>

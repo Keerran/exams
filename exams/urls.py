@@ -29,4 +29,8 @@ urlpatterns = [
     path("addexam/", views.AddExam.as_view(), name="addexam"),
     path("addsubject/", views.AddSubject.as_view(), name="addsubject"),
     path("timetable/", views.Timetable.as_view(), name="timetable"),
+    path("tests/", views.Tests.as_view(), name="tests"),
+    path("tests/<slug:slug>/", views.SubjectTests.as_view(), name="subject"),
+    path("tests/exams/<slug:slug>", views.ExamTests.as_view(), name="exam"),
+    path("tests/delete", views.DeleteTest.as_view(), name="delete_test"),
 ]

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Tests{% endblock %}
+{% block header %}
+	{% load static %}
+	<link rel="stylesheet" href="{% static "css/tests.css" %}"/>
+{% endblock %}
+{% block content %}
+	{% for subject in papers %}
+		<form action="{{ subject.0 }}">
+			<button class="subject">
+				<div id="colour" style="background: {{ "#"|add:subject.2 }};"></div>
+				{{ subject.1 }}
+			</button>
+		</form>
+	{% endfor %}
+{% endblock %}

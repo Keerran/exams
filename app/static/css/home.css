@@ -1,0 +1,116 @@
+.exams {
+    width: 600px;
+    margin: auto;
+    display: none;
+}
+
+.exam * {
+    font-family: Montserrat !important;
+}
+
+.subject {
+    font-family: "Montserrat SemiBold" !important;
+    font-size: 2.5rem;
+}
+
+.paper {
+    font-size: 2rem;
+}
+
+.exam,
+.fixed-action-btn a {
+    -moz-box-shadow: var(--shadow);
+    -webkit-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+}
+
+.exam {
+    display: inline-flex;
+    width: 100%;
+    margin: 10px;
+}
+
+.exam > :first-child {
+    width: 70%;
+    margin: 5px;
+}
+
+.exam > :last-child {
+
+    width: 30%;
+    background: rgba(0, 0, 0, 0.4);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.relative {
+    font-size: 1.2rem;
+}
+
+.relative span {
+    font-size: 2rem;
+}
+
+.hover {
+    position: absolute;
+    background: #000000;
+    padding: 5px;
+    display: none;
+}
+
+.hover:after {
+    right: 100%;
+    top: 50%;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border: 7px solid rgba(0, 0, 0, 0);
+    border-right-color: #000000;
+    margin-top: -7px;
+}
+
+#statButtons {
+    width: fit-content;
+    margin: auto;
+}
+
+#statButton > BTN {
+    width: 120px;
+}
+
+.visible {
+    display: initial;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #232328;
+}
+
+::-webkit-scrollbar-thumb {
+    min-height: 28px !important;
+    background: rgb(179, 179, 179) !important;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #232328;
+}
+
+::-webkit-scrollbar-corner {
+    background: rgb(237, 237, 237) !important;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+h1 {
+    font-family: "Montserrat SemiBold";
+    text-decoration: underline;
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: .5em;
+}
