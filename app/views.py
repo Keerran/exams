@@ -134,16 +134,17 @@ class Timetable(View):
 class AddExam(View):
     def get(self, request):
         return render(request, "addexam.html", context={
-            "subjects": Subject.objects.all(),
+            "subjects": Subject.objects.filter(user=request.user),
         })
 
     def post(self, request):
-        subject = Subject.objects.get(pk=request.POST["subject"])
+        subject = Subject.objects.get(name=request.POST["subject"], user=request.user)
         paper = request.POST["paper"]
-        user = request.user
         dt = "{0} {1}".format(request.POST["date"], request.POST["time"])
-        dt = datetime.datetime.strptime(dt, "%Y-%m-%d %H:%M")
-        Exam.objects.create(subject=subject, paper=paper, user=user, date=dt).save()
+        dt = datetime.datetime.strptime(dt, "%Y/%m/%d %H:%M")
+        max_score = request.POST["max_score"]
+        duration = request.POST["duration"]
+        Exam.objects.create(subject=subject, paper=paper, date=dt, duration=duration, max_score=max_score).save()
         return redirect("home")
 
 
@@ -156,7 +157,8 @@ class AddSubject(View):
         colour = request.POST["colour"].strip("#")
         Subject.objects.create(name=request.POST["name"],
                                verbose_name=request.POST["v_name"],
-                               colour=colour).save()
+                               colour=colour,
+                               user=request.user).save()
         return redirect("home")
 
 
@@ -172,7 +174,7 @@ class Tests(View):
 
 class SubjectTests(DetailView):
     model = Subject
-    slug_field = "name"
+    slug_field = "id"
     template_name = "subject.html"
 
     def get_context_data(self, **kwargs):
