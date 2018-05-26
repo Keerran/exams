@@ -8,6 +8,7 @@
 {% block content %}
 	<h1>{{ object.subject }}: {{ object.paper }}</h1>
 	{% load app_tags %}
+	<div>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
@@ -40,6 +41,11 @@
 			</form>
 		</tfoot>
 	</table>
+	<div style="float: right;">
+		Average Score: <span id="avg_score">{{ avg_score|floatformat:"0" }} / {{ exam.max_score }}</span><br>
+		Average Time Left: <span id="avg_time">{{ avg_time|floatformat:"0" }}</span>
+	</div>
+	</div>
 	{% csrf_token %}
 	<script type="text/javascript">
 	// using jQuery

@@ -12,6 +12,7 @@
 	{% for paper in papers %}
 		<form action="{% url "exam" slug=paper.id %}">
 			<button class="subject">
+				<div id="colour" style="background: {{ "#"|add:paper.subject.colour }};"></div>
 				{{ paper.paper }}
 			</button>
 		</form>

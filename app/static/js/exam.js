@@ -10,6 +10,11 @@ $.ajaxSetup({
     }
 });
 
+function updateAvgs(data) {
+    $("#avg_score").text(Math.round(data["avg_score"]) + " / " + data["max_score"]);
+    $("#avg_time").text(Math.round(data["avg_time"]));
+}
+
 function sub(pk) {
     $.ajax({
         type: "POST",
@@ -18,8 +23,9 @@ function sub(pk) {
             "pk": pk
         },
         dataType: "json",
-        success: function() {
+        success: function(data) {
             $("#" + pk).parents("tr").remove();
+            updateAvgs(data);
         }
     })
 }
@@ -45,8 +51,10 @@ $("#add").submit(function (event) {
             el.find("form").submit(function() {
                 sub(data["pk"])
             });
-            $("tbody").append(el)
+            $("tbody").append(el);
             $("#error").text();
+            $("#score").focus()
+            updateAvgs(data);
         }
     });
     $(this)[0].reset()

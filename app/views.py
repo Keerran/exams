@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Avg, StdDev
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -188,8 +189,11 @@ class ExamTests(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["tests"] = Test.objects.filter(exam__user=self.request.user).prefetch_related()
+        tests = Test.objects.filter(exam__user=self.request.user)
 
+        context["tests"] = tests
+        context = {**context, **tests.aggregate(avg_score=Coalesce(Avg("score"), 0),
+                                                avg_time=Coalesce(Avg("minutes_left"), 0))}
         return context
 
     def post(self, request, slug):
@@ -199,11 +203,16 @@ class ExamTests(DetailView):
         t = Test.objects.create(exam=obj, score=score, minutes_left=minutes_left)
         t.save()
         percentage = round((t.score / t.exam.max_score) * 100)
+        tests = Test.objects.filter(exam__user=self.request.user)
+        avgs = tests.aggregate(avg_score=Coalesce(Avg("score")),
+                               avg_time=Coalesce(Avg("minutes_left")))
         return JsonResponse({
             "pk": t.pk,
             "score": t.score,
             "percentage": percentage,
             "minutes_left": t.minutes_left,
+            "max_score": obj.max_score,
+            **avgs
         })
 
 
@@ -211,5 +220,7 @@ class DeleteTest(View):
     def post(self, request):
         obj = Test.objects.get(pk=self.request.POST["pk"])
         obj.delete()
-
-        return JsonResponse({})
+        tests = Test.objects.filter(exam__user=self.request.user)
+        avgs = tests.aggregate(avg_score=Avg("score"), avg_time=Avg("minutes_left"))
+        avgs["max_score"] = obj.exam.max_score
+        return JsonResponse(avgs)

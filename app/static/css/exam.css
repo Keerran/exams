@@ -1,7 +1,13 @@
 main {
     padding: 10px;
 }
+
+main > div > * {
+    width: 50%;
+}
+
 table {
+    float: left;
     width: 900px !important;
 }
 
