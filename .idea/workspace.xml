@@ -2,10 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="40cd0dfd-3af7-4440-82f6-575666ec861e" name="Default" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/addexam.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addexam.html" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/app/migrationsold/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/migrationsold/0009_auto_20180526_2349.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/migrationsold/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0002_add_subjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrations/0002_add_subjects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0003_remove_user_timezone.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0003_remove_user_timezone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0004_user_timezone.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0004_user_timezone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0005_auto_20180525_2120.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0005_auto_20180525_2120.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0006_auto_20180525_2237.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0006_auto_20180525_2237.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0007_test_date.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0007_test_date.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/migrations/0008_auto_20180526_2320.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/migrationsold/0008_auto_20180526_2320.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,6 +48,7 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="addsubject.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/addsubject.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -45,6 +63,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="71">
               <caret line="9" selection-start-line="9" selection-end-line="9" />
+=======
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-316">
+              <caret line="70" column="41" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="41" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
             </state>
           </provider>
         </entry>
@@ -58,6 +86,7 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -66,10 +95,18 @@
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
+=======
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="subject.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/subject.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -78,6 +115,13 @@
               <folding>
                 <element signature="e#327#382#0#HTML" expanded="true" />
               </folding>
+=======
+      <file leaf-file-name="0002_add_subjects.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/migrations/0002_add_subjects.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="7" column="97" lean-forward="true" selection-start-line="7" selection-start-column="97" selection-end-line="7" selection-end-column="97" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
             </state>
           </provider>
         </entry>
@@ -112,8 +156,13 @@
       <file leaf-file-name="0002_add_subjects.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/migrations/0002_add_subjects.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="182">
               <caret line="7" column="97" lean-forward="true" selection-start-line="7" selection-start-column="97" selection-end-line="7" selection-end-column="97" />
+=======
+            <state relative-caret-position="286">
+              <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
             </state>
           </provider>
         </entry>
@@ -157,11 +206,14 @@
       <find>e.user</find>
       <find>user</find>
       <find>user+</find>
+<<<<<<< HEAD
       <find>Subject.objects</find>
       <find>Subject</find>
       <find>subject</find>
       <find>Exam.objects.</find>
       <find>moment</find>
+=======
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
     </findStrings>
     <replaceStrings>
       <replace />
@@ -218,6 +270,10 @@
         <option value="$PROJECT_DIR$/app/static/js/exam.js" />
         <option value="$PROJECT_DIR$/templates/subject.html" />
         <option value="$PROJECT_DIR$/templates/base.html" />
+<<<<<<< HEAD
+=======
+        <option value="$PROJECT_DIR$/app/views.py" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
         <option value="$PROJECT_DIR$/app/migrations/0002_add_subjects.py" />
         <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/templates/addexam.html" />
@@ -688,6 +744,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/exams/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
@@ -712,12 +769,31 @@
     <entry file="file://$PROJECT_DIR$/app/migrations/0001_initial.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1152" />
+=======
+    <entry file="file://$PROJECT_DIR$/templates/addexam.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1716">
+          <caret column="25" selection-start-column="25" selection-end-column="25" />
+        </state>
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/migrations/0002_add_subjects.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="182">
           <caret line="7" column="97" lean-forward="true" selection-start-line="7" selection-start-column="97" selection-end-line="7" selection-end-column="97" />
+=======
+        <state relative-caret-position="422">
+          <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="388">
+          <caret line="134" column="67" selection-start-line="134" selection-start-column="67" selection-end-line="134" selection-end-column="67" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
         </state>
       </provider>
     </entry>
@@ -728,15 +804,37 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/templates/registration/signup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="71">
           <caret line="9" selection-start-line="9" selection-end-line="9" />
+=======
+    <entry file="file://$PROJECT_DIR$/exams/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html">
+    <entry file="file://$PROJECT_DIR$/app/forms.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/tests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="216">
           <caret line="76" column="15" selection-start-line="76" selection-start-column="15" selection-end-line="76" selection-end-column="15" />
         </state>
@@ -760,6 +858,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="620">
           <caret line="44" column="42" selection-start-line="44" selection-start-column="33" selection-end-line="44" selection-end-column="42" />
+=======
+        <state relative-caret-position="-316">
+          <caret line="70" column="41" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
         </state>
       </provider>
     </entry>
@@ -773,20 +878,37 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/templates/addexam.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
           <caret line="96" column="69" selection-start-line="96" selection-start-column="60" selection-end-line="96" selection-end-column="69" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1152" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/migrations/0002_add_subjects.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="7" column="97" lean-forward="true" selection-start-line="7" selection-start-column="97" selection-end-line="7" selection-end-column="97" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="198">
           <caret line="146" column="105" lean-forward="true" selection-start-line="146" selection-start-column="105" selection-end-line="146" selection-end-column="105" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
+=======
+        <state relative-caret-position="374">
+          <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+>>>>>>> 259b3b9ee07bd25eba1dadf4cc16f4661aa67a88
         </state>
       </provider>
     </entry>
