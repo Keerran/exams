@@ -35,7 +35,7 @@ class Subject(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def natural_key(self):
-        return self.verbose_name, self.colour
+        return self.verbose_name, self.colour, self.user.natural_key()
 
     def __str__(self):
         return self.verbose_name

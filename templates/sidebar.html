@@ -91,7 +91,8 @@
                         $("#colour").css({"background": "#" + exam["subject"][1]});
                         $("#subject").text(exam["subject"][0]);
                         $("#paper").text(exam["paper"]);
-                        var date = moment.tz(exam["date"], exam["user"][1]);
+                        console.log(exam);
+                        var date = moment.tz(exam["date"], exam["subject"][2][1]);
                         var start = date.format("HH[:]mm");
                         date.add(exam["duration"], "minutes");
                         var end = date.format("HH[:]mm");
