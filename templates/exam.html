@@ -2,41 +2,8 @@
 {% block title %}Exam{% endblock %}
 {% block header %}
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<style>
-		main {
-			padding: 10px;
-		}
-		table {
-			width: 900px !important;
-		}
-		form {
-			margin: 0;
-		}
-		tfoot td:not(:last-child) {
-			padding:0 !important;
-		}
-
-		table th:last-child {
-			border:none !important;
-			padding: 0 !important;
-		}
-
-		table td:last-child {
-			width: 90px !important;
-			padding: 0 !important;
-		}
-
-		button {
-			height: 50px;
-			width: 90px;
-		}
-
-		tfoot input {
-			height:51px;
-			width: 100%;
-		}
-	</style>
 	{% load static %}
+	<link rel="stylesheet" href="{% static "css/exam.css" %}"/>
 {% endblock %}
 {% block content %}
 	<h1>{{ object.subject }}: {{ object.paper }}</h1>
@@ -57,7 +24,7 @@
 					<td>{{ test.score|percent:object.max_score }}</td>
 					<td>{{ test.minutes_left }}</td>
 					<td><form class="del" id="{{ test.pk }}" action="javascript:;">
-						<button name="pk" type="submit"><i class="material-icons">delete</i></button>
+						<button class="form-control" name="pk" type="submit"><i class="material-icons">delete</i></button>
 					</form></td>
 				</tr>
 			{% endfor %}
@@ -65,10 +32,10 @@
 		<tfoot>
 			<form id="add" action="javascript:;">
 				<tr>
-					<td><input id="score" type="number" required/></td>
+					<td><input placeholder="Input" id="score" type="number" max="{{ exam.max_score }}" required/></td>
 					<td></td>
-					<td><input id="minutes_left" type="number" required/></td>
-					<td><button type="submit"><i class="material-icons">note_add</i></button></td>
+					<td><input placeholder="Input" id="minutes_left" type="number" max="{{ exam.duration }}" required/></td>
+					<td><button class="form-control" type="submit"><i class="material-icons">note_add</i></button></td>
 				</tr>
 			</form>
 		</tfoot>

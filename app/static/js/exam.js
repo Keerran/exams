@@ -46,6 +46,7 @@ $("#add").submit(function (event) {
                 sub(data["pk"])
             });
             $("tbody").append(el)
+            $("#error").text();
         }
     });
     $(this)[0].reset()

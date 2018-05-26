@@ -1,0 +1,45 @@
+main {
+    padding: 10px;
+}
+table {
+    width: 900px !important;
+}
+
+.table-bordered td {
+    vertical-align: middle;
+}
+
+form {
+    margin: 0;
+}
+tfoot td:not(:last-child) {
+    padding:0 !important;
+}
+
+table th:last-child {
+    border:none !important;
+    padding: 0 !important;
+}
+
+table td:last-child {
+    width: 90px !important;
+    padding: 0 !important;
+}
+
+button {
+    height: 50px;
+    width: 90px;
+    border-radius: 0 !important;
+}
+
+table,
+table * {
+    font-size: 20px;
+}
+
+tfoot input {
+    border: none !important;
+    padding: 1px 5px;
+    height:50px;
+    width: 100%;
+}

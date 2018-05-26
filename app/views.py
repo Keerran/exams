@@ -188,7 +188,7 @@ class ExamTests(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["tests"] = Test.objects.filter(exam__user=self.request.user)
+        context["tests"] = Test.objects.filter(exam__user=self.request.user).prefetch_related()
 
         return context
 
