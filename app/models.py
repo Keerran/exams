@@ -17,12 +17,13 @@ class User(AbstractUser):
         create = not self.pk
         super().save(*args, **kwargs)
         if create:
-            Exam.objects.create(subject_id="Results Day",
+            s = Subject.objects.create(name="Results Day", verbose_name="Results Day", colour="757575", user=self)
+            s.save()
+            Exam.objects.create(subject=s,
                                 date=datetime.datetime(2018, 8, 16, 8, 15),
                                 paper="",
-                                user=self,
                                 duration=90
-                                )
+                                ).save()
 
 
 # Create your models here.
@@ -30,6 +31,7 @@ class Subject(models.Model):
     name = models.CharField(primary_key=True, max_length=100)
     verbose_name = models.CharField(max_length=100)
     colour = models.CharField(max_length=6)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def natural_key(self):
         return self.verbose_name, self.colour
@@ -41,7 +43,6 @@ class Subject(models.Model):
 class Exam(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     paper = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField()
     duration = models.PositiveSmallIntegerField()
     max_score = models.PositiveSmallIntegerField()
@@ -54,7 +55,7 @@ class Exam(models.Model):
 
     @classmethod
     def get_user_subjects(cls, user):
-        return cls.objects.filter(user=user).exclude(subject__name="Results Day")
+        return cls.objects.filter(subject__user=user).exclude(subject__name="Results Day")
 
 
 class Test(models.Model):

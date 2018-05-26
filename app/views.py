@@ -61,14 +61,14 @@ def get_exam_data(exam):
         delta = "{h} hours, {m} minutes".format(
             h=h + offset, m=round(seconds / 60)
         )
-    date = make_naive(date, exam.user.timezone).strftime("%d %B %Y %H:%M")
+    date = make_naive(date, exam.subject.user.timezone).strftime("%d %B %Y %H:%M")
     return exam, date, relative, delta
 
 
 def home(request):
     if not request.user.is_authenticated:
         return render(request, "base.html")
-    e = Exam.objects.filter(user=request.user).order_by("date")
+    e = Exam.objects.filter(subject__user=request.user).order_by("date")
     pending = e.filter(date__gt=timezone.now())
     done = e.filter(date__lte=timezone.now())
 
@@ -177,7 +177,7 @@ class SubjectTests(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["papers"] = Exam.objects.filter(subject=self.object, user=self.request.user)
+        context["papers"] = Exam.objects.filter(subject=self.object, subject__user=self.request.user)
         return context
 
 
@@ -189,7 +189,7 @@ class ExamTests(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        tests = Test.objects.filter(exam__user=self.request.user)
+        tests = Test.objects.filter(exam__subject__user=self.request.user)
 
         context["tests"] = tests
         context = {**context, **tests.aggregate(avg_score=Coalesce(Avg("score"), 0),
@@ -203,9 +203,9 @@ class ExamTests(DetailView):
         t = Test.objects.create(exam=obj, score=score, minutes_left=minutes_left)
         t.save()
         percentage = round((t.score / t.exam.max_score) * 100)
-        tests = Test.objects.filter(exam__user=self.request.user)
-        avgs = tests.aggregate(avg_score=Coalesce(Avg("score")),
-                               avg_time=Coalesce(Avg("minutes_left")))
+        tests = Test.objects.filter(exam__subject__user=self.request.user)
+        avgs = tests.aggregate(avg_score=Coalesce(Avg("score"), 0),
+                               avg_time=Coalesce(Avg("minutes_left"), 0))
         return JsonResponse({
             "pk": t.pk,
             "score": t.score,
@@ -220,7 +220,7 @@ class DeleteTest(View):
     def post(self, request):
         obj = Test.objects.get(pk=self.request.POST["pk"])
         obj.delete()
-        tests = Test.objects.filter(exam__user=self.request.user)
+        tests = Test.objects.filter(exam__subject__user=self.request.user)
         avgs = tests.aggregate(avg_score=Avg("score"), avg_time=Avg("minutes_left"))
         avgs["max_score"] = obj.exam.max_score
         return JsonResponse(avgs)
