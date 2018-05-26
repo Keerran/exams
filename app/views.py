@@ -156,7 +156,8 @@ class AddSubject(View):
         colour = request.POST["colour"].strip("#")
         Subject.objects.create(name=request.POST["name"],
                                verbose_name=request.POST["v_name"],
-                               colour=colour).save()
+                               colour=colour,
+                               user=request.user).save()
         return redirect("home")
 
 
