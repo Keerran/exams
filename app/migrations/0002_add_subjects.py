@@ -5,10 +5,10 @@ from django.db import migrations
 
 def add_subjects(apps, schema_editor):
     Subject = apps.get_model('app', 'Subject')
-    Subject.objects.create(name="FMaths", verbose_name="Further Maths", colour="DB995A").save()
-    Subject.objects.create(name="Phys", verbose_name="Physics", colour="CC4F4F").save()
-    Subject.objects.create(name="CompSci", verbose_name="Computer Science", colour="2D48B5").save()
-    Subject.objects.create(name="Results Day", verbose_name="Results Day", colour="757575").save()
+    Subject.objects.create(name="FMaths", verbose_name="Further Maths", colour="DB995A", user_id=1).save()
+    Subject.objects.create(name="Phys", verbose_name="Physics", colour="CC4F4F", user_id=1).save()
+    Subject.objects.create(name="CompSci", verbose_name="Computer Science", colour="2D48B5", user_id=1).save()
+    Subject.objects.create(name="Results Day", verbose_name="Results Day", colour="757575", user_id=1).save()
 
 
 class Migration(migrations.Migration):

@@ -22,13 +22,14 @@ class User(AbstractUser):
             Exam.objects.create(subject=s,
                                 date=datetime.datetime(2018, 8, 16, 8, 15),
                                 paper="",
-                                duration=90
+                                duration=90,
+                                max_score=0
                                 ).save()
 
 
 # Create your models here.
 class Subject(models.Model):
-    name = models.CharField(primary_key=True, max_length=100)
+    name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
     colour = models.CharField(max_length=6)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
