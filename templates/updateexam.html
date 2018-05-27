@@ -1,0 +1,36 @@
+{% extends "addexam.html" %}
+{% block title %}Update Exam{% endblock %}
+{% block header %}
+	{{ block.super }}
+	<style>
+		main form {
+			position: relative;
+		}
+
+		#delete {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			padding: 6px;
+		}
+	</style>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	{{ block.super }}
+	<script>
+		var exams = JSON.parse("{{ exam|escapejs }}")[0];
+		$("main form").append($("<input name=\"pk\" type=\"hidden\" value=\""+ exams["pk"] +"\"/>"));
+		$("main form").append($("<button id=\"delete\" type=\"submit\" formaction=\"{% url "deleteexam" %}\"><i class=\"material-icons\">delete</i></button>"))
+		exams = exams["fields"];
+		$.each(exams, function(k, v) {
+		    if(k == "date") {
+		        var date = moment.tz(v, exams["subject"][2]).format("YYYY/MM/DD hh:mm").split(" ");
+		        $("#date").val(date[0]);
+		        $("#time").val(date[1]);
+		        return;
+		    }
+		    $("#" + k).val(v);
+		});
+	</script>
+{% endblock %}

@@ -62,7 +62,7 @@
 			<select id="subject" class="form-control" name="subject" required>
 			    <option disabled selected value>Choose a Subject</option>
 				{% for subject in subjects %}
-					<option value="{{ subject.name }}" style="background-color:{{ subject.colour }}">{{ subject.verbose_name }}</option>
+					<option value="{{ subject.id }}" style="background-color:{{ subject.colour }}">{{ subject.verbose_name }}</option>
 				{% endfor %}
 			</select>
 		</div>
@@ -72,13 +72,13 @@
 		</div>
 		<div class="form-group">
 			<label for="date">Date</label>
-			<input id="datepicker" name="date" class="form-control" required/>
+			<input id="date" name="date" class="form-control" required/>
 			<!--input id="date" class="form-control" type="date" name="date" required>-->
 		</div>
 		<div class="form-group">
 			<label for="time">Time</label>
 			<div class="input-group clockpicker" data-autoclose="true">
-			    <input type="text" name="time" class="form-control" value="09:30">
+			    <input id="time" type="text" name="time" class="form-control" value="09:30">
 			    <span class="input-group-addon input-group-append" role="right-icon">
 				    <button class="btn btn-outline-secondary border-left-0" type="button" style="width:38px"><i class="gj-icon">clock</i></button>
 			    </span>
@@ -90,18 +90,18 @@
 		</div>
 		<div class="form-group">
 			<label for="duration">Duration in Minutes</label>
-			<input class="form-control" type="number" name="duration" required/>
+			<input id="duration" class="form-control" type="number" name="duration" required/>
 		</div>
 		<div class="form-group">
 			<label for="duration">Max Mark</label>
-			<input class="form-control" type="number" name="max_score" required/>
+			<input id="max_score" class="form-control" type="number" name="max_score" required/>
 		</div>
 		<div class="form-group">
 			<input class="form-control" type="submit" value="Submit">
 		</div>
 	</form>
 	<script>
-        $('#datepicker').datepicker({
+        $('#date').datepicker({
             uiLibrary: 'bootstrap4',
 	        format: 'yyyy/mm/dd'
         });

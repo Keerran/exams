@@ -155,10 +155,11 @@
 				<a class="nav-link" href="{% url "home" %}">Home</a>
 			</li>
 			{% if user.is_authenticated %}
-				{% with "timetable tests" as templates %}
+				{% with "timetable tests subject_list" as templates %}
+					{% load app_tags %}
 					{% for template in templates.split %}
 						<li class="nav-item active">
-						<a class="nav-link" href="{% url template %}">{{ template.title }}</a>
+						<a class="nav-link" href="{% url template %}">{{ template|split_title }}</a>
 						</li>
 					{% endfor %}
 				{% endwith %}

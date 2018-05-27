@@ -1,19 +1,16 @@
 import datetime
 
-import pytz
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
-from django.db.models import Min, Max, Avg, StdDev
+from django.db.models import Min, Max, Avg
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
 # Create your views here.
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.utils.timezone import make_aware, is_naive, make_naive
+from django.utils.timezone import make_naive
 from django.views import View
 from django.views.generic import DetailView
 
@@ -138,7 +135,7 @@ class AddExam(View):
         })
 
     def post(self, request):
-        subject = Subject.objects.get(name=request.POST["subject"], user=request.user)
+        subject = Subject.objects.get(pk=request.POST["subject"], user=request.user)
         paper = request.POST["paper"]
         dt = "{0} {1}".format(request.POST["date"], request.POST["time"])
         dt = datetime.datetime.strptime(dt, "%Y/%m/%d %H:%M")
@@ -146,6 +143,38 @@ class AddExam(View):
         duration = request.POST["duration"]
         Exam.objects.create(subject=subject, paper=paper, date=dt, duration=duration, max_score=max_score).save()
         return redirect("home")
+
+
+class UpdateExam(View):
+    def get(self, request):
+        exam = get_object_or_404(Exam, pk=request.GET["pk"])
+        serialized_exam = serializers.serialize("json", [exam])
+        return render(request, "updateexam.html", context={
+            "subjects": Subject.objects.filter(user=request.user),
+            "exam": serialized_exam,
+        })
+
+    def post(self, request):
+        subject = Subject.objects.get(pk=request.POST["subject"], user=request.user)
+        pk = request.POST["pk"]
+        paper = request.POST["paper"]
+        dt = "{0} {1}".format(request.POST["date"], request.POST["time"])
+        dt = datetime.datetime.strptime(dt, "%Y/%m/%d %H:%M")
+        max_score = request.POST["max_score"]
+        duration = request.POST["duration"]
+        Exam.objects.filter(pk=pk).update(subject=subject,
+                                          paper=paper,
+                                          date=dt,
+                                          max_score=max_score,
+                                          duration=duration)
+        return redirect("home")
+
+
+class DeleteExam(View):
+    def post(self, request):
+        pk = request.POST["pk"]
+        Exam.objects.get(pk=pk).delete()
+        return JsonResponse({})
 
 
 @method_decorator(login_required, name="dispatch")
@@ -160,6 +189,31 @@ class AddSubject(View):
                                colour=colour,
                                user=request.user).save()
         return redirect("home")
+
+
+class UpdateSubject(View):
+    def get(self, request):
+        exam = get_object_or_404(Subject, name=request.GET["subject"], user=request.user)
+        serialized_exam = serializers.serialize("json", [exam])
+        return render(request, "updatesubject.html", context={
+            "subject": serialized_exam
+        })
+
+    def post(self, request):
+        colour = request.POST["colour"].strip("#")
+        Subject.objects.filter(pk=request.POST["pk"])\
+                       .update(name=request.POST["name"],
+                               verbose_name=request.POST["v_name"],
+                               colour=colour,
+                               user=request.user)
+        return redirect("home")
+
+
+class DeleteSubject(View):
+    def post(self, request):
+        pk = request.POST["pk"]
+        Subject.objects.get(pk=pk).delete()
+        return redirect("subject_list")
 
 
 class Tests(View):
@@ -181,6 +235,12 @@ class SubjectTests(DetailView):
         context = super().get_context_data(**kwargs)
         context["papers"] = Exam.objects.filter(subject=self.object, subject__user=self.request.user)
         return context
+
+
+class SubjectList(View):
+    def get(self, request):
+        subjects = Subject.objects.filter(user=request.user)
+        return render(request,  "subjectlist.html", context={"subjects": subjects})
 
 
 class ExamTests(DetailView):

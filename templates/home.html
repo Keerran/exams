@@ -62,7 +62,8 @@
 		<div id="done" class="exams" style="position:absolute">
 			{% for data in done %}
 				{% with data.0 as exam %}
-					<div class="exam" style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
+					<div id="exam" data-exams="[{{ exam.id }}]" class="exam"
+					     style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
 						<div>
 							<div class="subject">{{ exam.subject.verbose_name }}</div>
 							<div class="paper">{{ exam.paper }}</div>

@@ -17,3 +17,9 @@ def percent(value, arg):
     except:
         pass
     return ''
+
+
+@register.filter
+def split_title(value):
+    value = value.replace("_", " ").title()
+    return value

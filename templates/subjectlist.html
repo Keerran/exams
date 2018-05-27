@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Subject List{% endblock %}
+{% block header %}
+	<style>
+		#subjects {
+			width: 600px;
+	        margin: auto;
+		}
+
+		.subject {
+		    display: inline-block;
+		    width: 100%;
+		    margin: 10px;
+			height: 120px;
+			line-height: 120px;
+		    -moz-box-shadow: var(--shadow);
+		    -webkit-box-shadow: var(--shadow);
+		    box-shadow: var(--shadow);
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div id="subjects">
+		{% for subject in subjects %}
+			<a href="/update/subject?subject={{ subject.name }}">
+					<div class="subject" style="background-color: {{ subject.colour }}">
+						{{ subject.verbose_name }}
+					</div>
+			</a>
+		{% endfor %}
+	</div>
+{% endblock %}

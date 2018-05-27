@@ -4,6 +4,14 @@
 	<script src="{% static 'js/moment.js' %}"></script>
 	<script src="{% static 'js/moment-timezone.js' %}"></script>
 	<style>
+		#edit {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
+		#edit button {
+			padding: 6px;
+		}
 		#sidebar {
 			margin-left: -500px;
 			transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -87,11 +95,11 @@
                 for (var key in exams) {
                     var exam = exams[key];
                     if (exam["pk"] == pks[index]) {
+                        $("#edit input").val(exam["pk"]);
                         exam = exam["fields"];
                         $("#colour").css({"background": "#" + exam["subject"][1]});
                         $("#subject").text(exam["subject"][0]);
                         $("#paper").text(exam["paper"]);
-                        console.log(exam);
                         var date = moment.tz(exam["date"], exam["subject"][2][1]);
                         var start = date.format("HH[:]mm");
                         date.add(exam["duration"], "minutes");
@@ -121,6 +129,10 @@
 	{% block body %}
 	{% endblock %}
 	<div id="sidebar">
+		<form id="edit" action="{% url "updateexam" %}">
+			<input type="hidden" name="pk">
+			<button><i class="material-icons">edit</i></button>
+		</form>
 		<div id="colour"></div>
 		<div id="subject"></div>
 		<div id="paper"></div>

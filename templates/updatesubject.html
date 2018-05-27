@@ -1,0 +1,30 @@
+{% extends "addsubject.html" %}
+{% block title %}Update Subject{% endblock %}
+{% block header %}
+	{{ block.super }}
+	<style>
+		main form {
+			position: relative;
+		}
+
+		#delete {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			padding: 6px;
+		}
+	</style>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	{{ block.super }}
+	<script>
+		var exams = JSON.parse("{{ subject|escapejs }}")[0];
+		$("main form").append($("<input name=\"pk\" type=\"hidden\" value=\""+ exams["pk"] +"\"/>"));
+		$("main form").append($("<button id=\"delete\" type=\"submit\" formaction=\"{% url "deletesubject" %}\"><i class=\"material-icons\">delete</i></button>"))
+		exams = exams["fields"];
+		$.each(exams, function(k, v) {
+		    $("#" + k).val(v);
+		});
+	</script>
+{% endblock %}
