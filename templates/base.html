@@ -106,7 +106,13 @@
 			background: #1E1E23 !important;
 		}
 
+		.material-icons {
+			vertical-align: bottom;
+		}
+
 		.nav-item, .nav-item:hover {
+			width: 150px;
+			text-align: center;
 			background: transparent !important;
 		}
 
@@ -122,13 +128,51 @@
 			z-index: 1;
 		}
 
+		.nav-link {
+			height: 34px;
+			position:relative;
+			padding: 5px;
+		}
+
+		.nav-link p {
+			width: fit-content;
+			margin: auto;
+		}
+
+		.nav-link.current i, .nav-link:hover i {
+			color: var(--highlight);
+		}
+
+		.nav-link i {
+			margin-right: 10px;
+		}
+
+		.nav-link p:after {
+			content: "";
+			position: absolute;
+			left: 0px;
+			right: 0px;
+			bottom: -11px;
+			opacity: 0;
+			border-bottom: 5px solid var(--highlight) !important;
+			transition: opacity 0.1s linear;
+		}
+
+		.nav-link.current p:after, .nav-link:hover p:after {
+			opacity: 1;
+		}
+
+		.fixed-top {
+			height: 56px;
+		}
+
 		.bg-dark {
 			background-color: #131318 !important;
 		}
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<title>{% block title %}Exams{% endblock %}</title>
@@ -152,14 +196,21 @@
 	<div class="collapse navbar-collapse" id="navbarCollapse">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item active">
-				<a class="nav-link" href="{% url "home" %}">Home</a>
-			</li>
+						{% if request.resolver_match.url_name == "home" %}
+							<a class="nav-link current" href="{% url "home" %}"><p><i class="material-icons">home</i>Home</p></a>
+						{% else %}
+							<a class="nav-link" href="{% url "home" %}"><p><i class="material-icons">home</i>Home</p>							</a>
+						{% endif %}			</li>
 			{% if user.is_authenticated %}
-				{% with "timetable tests subject_list" as templates %}
+				{% with "timetable tests subjects" as templates %}
 					{% load app_tags %}
 					{% for template in templates.split %}
 						<li class="nav-item active">
-						<a class="nav-link" href="{% url template %}">{{ template|split_title }}</a>
+						{% if request.resolver_match.url_name == template %}
+							<a class="nav-link current" href="{% url template %}"><p><i class="icon material-icons">{{ template }}</i>{{ template|split_title }}</p></a>
+						{% else %}
+							<a class="nav-link" href="{% url template %}"><p><i class="icon material-icons">{{ template }}</i>{{ template|split_title }}</p></a>
+						{% endif %}
 						</li>
 					{% endfor %}
 				{% endwith %}
@@ -192,6 +243,12 @@
 	{% block content %}
 	{% endblock %}
 </main>
+<script>
+	var icons = {"timetable": "calendar_today", "tests": "edit", "subjects": "subject"}
+	$(".icon").each(function() {
+	    $(this).text(icons[$(this).text()]);
+	})
+</script>
 </body>
 
 </html>

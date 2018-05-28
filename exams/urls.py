@@ -37,5 +37,5 @@ urlpatterns = [
     path("tests/<slug:slug>/", views.SubjectTests.as_view(), name="subject"),
     path("tests/exams/<slug:slug>", views.ExamTests.as_view(), name="exam"),
     path("tests/delete", views.DeleteTest.as_view(), name="delete_test"),
-    path("subjectlist", views.SubjectList.as_view(), name="subject_list"),
+    path("subjectlist", views.SubjectList.as_view(), name="subjects"),
 ]

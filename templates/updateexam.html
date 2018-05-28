@@ -14,12 +14,12 @@
 			padding: 6px;
 		}
 	</style>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 {% block content %}
 	{{ block.super }}
 	<script>
 		var exams = JSON.parse("{{ exam|escapejs }}")[0];
+		$("main h1").text("Update Exam");
 		$("main form").append($("<input name=\"pk\" type=\"hidden\" value=\""+ exams["pk"] +"\"/>"));
 		$("main form").append($("<button id=\"delete\" type=\"submit\" formaction=\"{% url "deleteexam" %}\"><i class=\"material-icons\">delete</i></button>"))
 		exams = exams["fields"];
