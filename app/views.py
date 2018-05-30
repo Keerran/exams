@@ -1,6 +1,10 @@
 import datetime
 import json
+from calendar import monthrange, Calendar
+from collections import defaultdict
 
+from dateutil.relativedelta import relativedelta
+from dateutil.rrule import MONTHLY, rrule
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -97,44 +101,53 @@ def home(request):
 @method_decorator(login_required, name='dispatch')
 class Timetable(View):
     def get(self, request):
-        e = Exam.get_user_subjects(request.user)
-        start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date()
-        end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date()
+        e = Exam.objects.filter(subject__user=request.user)
+        start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date().replace(day=1)
+        end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date().replace(day=1)
         padding = (start_date.weekday() + 1) % 6
-        days = []
-        for x in range(padding, 0, -1):
-            background = "transparent"  # 131318"
-            date = start_date - datetime.timedelta(days=x)
-            today = date == datetime.date.today()
-            days.append((date.day, background, today))
+        days = defaultdict(list)
         delta = end_date - start_date
-        for day in range(delta.days + 1):
-            date = (start_date + datetime.timedelta(days=day))
-            background = "background: transparent"
-            today = date == datetime.date.today()
-            exams = Exam.objects.filter(subject__user=request.user, date__date=date)
-            if exams.exists():
-                if len(exams) == 2:
-                    background = """background: linear-gradient(
-                    to right, 
-                    #{0} 0%, 
-                    #{0} 50%, 
-                    #{1} 50%, 
-                    #{1} 100%
-                    );""".format(exams[0].subject.colour, exams[1].subject.colour)
-                else:
-                    background = "background: #{0}".format(exams[0].subject.colour)
-            exam_list = exams.values_list("pk", flat=True)
-            is_exam = "exam_day" if len(exam_list) != 0 else "empty"
-            exams_js = list(exam_list)
-            days.append((date.day, background, str(today), exams_js, is_exam))
+        for dt in rrule(MONTHLY, dtstart=start_date, until=end_date):
+            for day in Calendar(firstweekday=6).itermonthdates(dt.year, dt.month):
+                date = day
+                background = "background: transparent"
+                today = date == datetime.date.today()
+                exams = Exam.objects.filter(subject__user=request.user, date__date=date)
+                if exams.exists():
+                    if len(exams) == 2:
+                        background = """background: linear-gradient(
+                        to right, 
+                        #{0} 0%, 
+                        #{0} 50%, 
+                        #{1} 50%, 
+                        #{1} 100%
+                        );""".format(exams[0].subject.colour, exams[1].subject.colour)
+                    else:
+                        background = "background: #{0}".format(exams[0].subject.colour)
+                exam_list = exams.values_list("pk", flat=True)
+                is_exam = "exam_day" if len(exam_list) != 0 else "empty"
+                exams_js = list(exam_list)
+                if date.month != dt.month:
+                    is_exam += " other_month"
+                days[dt.month].append((date.day, background, str(today), exams_js, is_exam))
+        filter_q = Q(exam=F("exam"))
+        avg_score = Avg(F("score"), filter=filter_q)
+        avg_mins = Avg(F("minutes_left"), filter=filter_q)
+        tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins) \
+            .values_list("exam", "avg_score", "avg_mins") \
+            .distinct()
+        tests = {x[0]: (x[1], x[2]) for x in tests}
         json_serializer = serializers.get_serializer("json")()
+        month = datetime.date.today().month
         exams = json_serializer.serialize(e, ensure_ascii=False,
                                           use_natural_foreign_keys=True,
                                           use_natural_primary_keys=True)
+        tests = json.dumps(dict(tests))
         return render(request, "timetable.html", context={
-            "days": days,
+            "calendar": dict(days),
             "exams": exams,
+            "tests": tests,
+            "cur_month": month,
         })
 
 

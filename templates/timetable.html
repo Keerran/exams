@@ -2,6 +2,10 @@
 {% block title %}Timetable{% endblock %}
 {% block head %}
 	<style>
+		.other_month {
+			filter: brightness(50%);
+		}
+
 		.day, .days {
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
@@ -11,22 +15,46 @@
 			user-select: none;
 		}
 
+		.labels {
+			display: grid;
+			grid-template-columns: repeat(7, 50px);
+			grid-column-gap: 10px;
+			margin-bottom: 10px;
+			padding: 10px;
+			background: var(--highlight);
+		}
+
 		.day-label {
+			width: 50px;
 			text-align: center;
 			font-family: "Montserrat ExtraBold" !important;
 			cursor: default;
+			display: inline-block;
 		}
 
 		.days {
-			display: grid;
 			justify-content: center;
 			margin: auto;
+			width: fit-content;
+			border-radius: 10px;
+			background: #303035;
+		}
+
+		#months {
+			position: relative;
+		    width: 430px;
+		    white-space: nowrap;
+		    overflow-x: hidden;
+		    padding-bottom: 10px;
+		    padding-left: 10px;
+		    padding-right: 10px;
+		}
+
+		.month {
+			display: inline-grid;
 			grid-template-columns: repeat(7, 50px);
 			grid-column-gap: 10px;
 			grid-row-gap: 10px;
-			width: fit-content;
-			padding: 10px;
-			border: var(--border);
 		}
 
 		.day {
@@ -51,10 +79,60 @@
 		.True {
 			background: #EFEFEF !important;
 			border-color: black;
+			color: black !important
 		}
 
-		.True {
-			color: black !important
+		#month-label {
+			text-align: center;
+			border-top-left-radius: 10px;
+			border-top-right-radius: 10px;
+			padding: 5px 0;
+			background: #121217;
+		}
+
+		.mask {
+			position:absolute;
+			pointer-events: none;
+			top:0;
+			left:0;
+			right:0;
+			bottom:0;
+			z-index:2;
+			border-radius: 10px;
+			background: linear-gradient(to right, #303035, rgba(0, 128, 128, 0) 10px),
+			linear-gradient(to left, #303035, rgba(0, 128, 128, 0) 10px);
+		}
+
+		#month-label p {
+			display: inline-block;
+			font-size: 24px;
+			margin: 0;
+		}
+
+		#month_slider {
+			transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+		}
+
+		.month-button {
+			background: transparent !important;
+			cursor: pointer;
+		}
+
+		.month-button:focus {
+			outline: 0;
+		}
+
+		.month-button[disabled] {
+			cursor: default;
+			filter: brightness(50%);
+		}
+
+		.month-button[disabled]:hover {
+			opacity: 1;
+		}
+
+		.month-button i {
+			font-size: 36px;
 		}
 
 	</style>
@@ -81,18 +159,96 @@
         });
 	</script>
 {% endblock %}
-{% block selector %}'.days > #exam_day'{% endblock %}
+{% block selector %}'.days .exam_day'{% endblock %}
 {% block nullSelector %}'.True'{% endblock %}
 {% block body %}
 	<div class="days" aria-selected="false" aria-readonly="true">
-		{% with "S M T W T F S" as weekdays %}
-			{% for weekday in weekdays.split %}
-				<div class="day-label" aria-readonly="true">{{ weekday }}</div>
+		<div id="month-label">
+			<button class="month-button prev" style="float: left" data-change="-1"><i class="material-icons">chevron_left</i></button>
+			<p id="selected-month"></p>
+			<button class="month-button next" style="float: right" data-change="+1"><i class="material-icons">chevron_right</i></button>
+		</div>
+		<div class="labels">
+			{% with "S M T W T F S" as weekdays %}
+				{% for weekday in weekdays.split %}
+					<div class="day-label" aria-readonly="true">{{ weekday }}</div>
+				{% endfor %}
+			{% endwith %}
+		</div>
+		<div id="months">
+			<div class="mask"></div>
+			<div id="month_slider">
+			{% for month, days in calendar.items %}
+				<div id="{{ month }}" class="month {% if month == cur_month %}current{% endif %}">
+				{% for day in days %}
+					<div aria-readonly="true" data-exams="{{ day.3 }}" class="day {{ day.4 }} {{ day.2 }}"
+					     style="{{ day.1 }}">{{ day.0 }}</div>
+				{% endfor %}
+				</div>
 			{% endfor %}
-		{% endwith %}
-		{% for day in days %}
-			<div id="{{ day.4 }}" aria-readonly="true" data-exams="{{ day.3 }}" class="day {{ day.2 }}"
-			     style="{{ day.1 }}">{{ day.0 }}</div>
-		{% endfor %}
+			</div>
+		</div>
 	</div>
+	<script>
+		var month_names = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"]
+		function setCurrent() {
+		    $("#month_slider").css({"margin-left":(-$("#months .current").index()*415) + "px"});
+		    $("#selected-month").text(month_names[$("#months .current")[0].id-1]);
+		    if($("#months .current").next().length == 0)
+		    {
+				$(".month-button.next").prop("disabled",true);
+		    }
+		    else {
+		        $(".month-button.next").prop("disabled",false);
+		    }
+		    if($("#months .current").prev().length == 0)
+		    {
+				$(".month-button.prev").prop("disabled",true);
+		    }
+		    else {
+		        $(".month-button.prev").prop("disabled",false);
+		    }
+		}
+		$(document).ready(function() {
+			setCurrent()
+			$(".month-button").click(function() {
+			    if($(this).data("change") == 1)
+			    {
+			        var el = $("#months .current")
+			        el.removeClass("current");
+				    el.next().addClass("current");
+			    }
+			    else {
+			        var el = $("#months .current")
+			        el.removeClass("current");
+				    el.prev().addClass("current");
+			    }
+			    setCurrent()
+			})
+
+            $(document).keydown(function(e) {
+                switch(e.keyCode)
+                {
+	                case 37:
+	                    if($("#months .current").prev().length != 0) {
+		                    var el = $("#months .current")
+					        el.removeClass("current");
+						    el.prev().addClass("current");
+						    setCurrent();
+					    }
+					    break;
+	                case 39:
+	                    if($("#months .current").next().length != 0)
+			            {
+			                var el = $("#months .current")
+			                el.removeClass("current");
+			                el.next().addClass("current");
+			                setCurrent();
+			            }
+		                break;
+                }
+            })
+		});
+	</script>
 {% endblock %}
