@@ -1,11 +1,11 @@
 <html>
 <head>
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	{% load static %}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
 	{#	 <link rel="stylesheet" href="{% static "css/login.css" %}">#}
 	<!--suppress CssUnknownTarget -->
 	<style>
@@ -147,18 +147,24 @@
 			margin-right: 10px;
 		}
 
-		.nav-link p:after {
+		::before {
+			box-sizing: content-box;
+		}
+
+		.nav-link p:before {
 			content: "";
 			position: absolute;
 			left: 0px;
 			right: 0px;
+			top: -11px;
 			bottom: -11px;
 			opacity: 0;
+			-webkit-backface-visibility:hidden;
 			border-bottom: 5px solid var(--highlight) !important;
 			transition: opacity 0.1s linear;
 		}
 
-		.nav-link.current p:after, .nav-link:hover p:after {
+		.nav-link.current p:before, .nav-link:hover p:before {
 			opacity: 1;
 		}
 
@@ -170,8 +176,7 @@
 			background-color: #131318 !important;
 		}
 	</style>
-	<link rel="stylesheet" href="https://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	{#    <script src="htps://cdnjs.buttflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>#}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
@@ -239,7 +244,7 @@
 		</form>
 	{% endif %}
 </nav>
-<main id="main" role="main" style="margin-top:56px;height:calc(100% - 56px);width:100%;position:relative;padding-top:20px;">
+<main id="main" role="main" style="margin-top:76px;height:calc(100% - 56px);width:100%;position:relative;">
 	{% block content %}
 	{% endblock %}
 </main>
@@ -249,6 +254,8 @@
 	    $(this).text(icons[$(this).text()]);
 	})
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 </body>
 
 </html>

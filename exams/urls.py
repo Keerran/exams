@@ -38,4 +38,5 @@ urlpatterns = [
     path("tests/exams/<slug:slug>", views.ExamTests.as_view(), name="exam"),
     path("tests/delete", views.DeleteTest.as_view(), name="delete_test"),
     path("subjectlist", views.SubjectList.as_view(), name="subjects"),
+    path("test/", views.AdminTest.as_view(), name="test"),
 ]

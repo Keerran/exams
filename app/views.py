@@ -1,9 +1,11 @@
 import datetime
+import json
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.db.models import Min, Max, Avg
+from django.db.models import Min, Max, Avg, F, Func, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -71,15 +73,24 @@ def home(request):
 
     d = [get_exam_data(exam) for exam in done]
     p = [get_exam_data(exam) for exam in pending]
+    filter_q = Q(exam=F("exam"))
+    avg_score = Avg(F("score"), filter=filter_q)
+    avg_mins = Avg(F("minutes_left"), filter=filter_q)
+    tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins)\
+                        .values_list("exam", "avg_score", "avg_mins")\
+                        .distinct()
+    tests = {x[0]: (x[1], x[2]) for x in tests}
 
     json_serializer = serializers.get_serializer("json")()
     exams = json_serializer.serialize(e, ensure_ascii=False,
                                       use_natural_foreign_keys=True,
                                       use_natural_primary_keys=True)
+    tests = json.dumps(dict(tests))
     return render(request, template_name="home.html", context={
         "exams": exams,
         "done": d,
         "pending": p,
+        "tests": tests,
     })
 
 
@@ -250,8 +261,7 @@ class ExamTests(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        tests = Test.objects.filter(exam__subject__user=self.request.user)
+        tests = Test.objects.filter(exam=self.object, exam__subject__user=self.request.user)
 
         context["tests"] = tests
         context = {**context, **tests.aggregate(avg_score=Coalesce(Avg("score"), 0),
@@ -265,7 +275,7 @@ class ExamTests(DetailView):
         t = Test.objects.create(exam=obj, score=score, minutes_left=minutes_left)
         t.save()
         percentage = round((t.score / t.exam.max_score) * 100)
-        tests = Test.objects.filter(exam__subject__user=self.request.user)
+        tests = Test.objects.filter(exam=obj, exam__subject__user=self.request.user)
         avgs = tests.aggregate(avg_score=Coalesce(Avg("score"), 0),
                                avg_time=Coalesce(Avg("minutes_left"), 0))
         return JsonResponse({
@@ -282,7 +292,13 @@ class DeleteTest(View):
     def post(self, request):
         obj = Test.objects.get(pk=self.request.POST["pk"])
         obj.delete()
-        tests = Test.objects.filter(exam__subject__user=self.request.user)
+        tests = Test.objects.filter(exam=obj.exam, exam__subject__user=self.request.user)
         avgs = tests.aggregate(avg_score=Avg("score"), avg_time=Avg("minutes_left"))
         avgs["max_score"] = obj.exam.max_score
         return JsonResponse(avgs)
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class AdminTest(View):
+    def get(self, request):
+        return render(request, "test.html")
