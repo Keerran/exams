@@ -103,6 +103,8 @@ class Timetable(View):
     def get(self, request):
         e = Exam.objects.filter(subject__user=request.user)
         start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date().replace(day=1)
+        if start_date > timezone.now().date():
+            start_date = timezone.now().date()
         end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date().replace(day=1)
         padding = (start_date.weekday() + 1) % 6
         days = defaultdict(list)
@@ -198,7 +200,7 @@ class DeleteExam(View):
     def post(self, request):
         pk = request.POST["pk"]
         Exam.objects.get(pk=pk).delete()
-        return JsonResponse({})
+        return redirect("home")
 
 
 @method_decorator(login_required, name="dispatch")
