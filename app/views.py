@@ -112,7 +112,7 @@ class Timetable(View):
             date = (start_date + datetime.timedelta(days=day))
             background = "background: transparent"
             today = date == datetime.date.today()
-            exams = Exam.objects.filter(date__date=date)
+            exams = Exam.objects.filter(user=request.user, date__date=date)
             if exams.exists():
                 if len(exams) == 2:
                     background = """background: linear-gradient(
