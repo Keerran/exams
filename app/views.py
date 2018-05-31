@@ -1,5 +1,7 @@
+import colorsys
 import datetime
 import json
+import numpy as np
 from calendar import monthrange, Calendar
 from collections import defaultdict
 
@@ -102,13 +104,15 @@ def home(request):
 class Timetable(View):
     def get(self, request):
         e = Exam.objects.filter(subject__user=request.user)
-        start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date().replace(day=1)
+        start_date = (e.aggregate(Min("date"))["date__min"] or timezone.now()).date()
         if start_date > timezone.now().date():
             start_date = timezone.now().date()
-        end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date().replace(day=1)
-        padding = (start_date.weekday() + 1) % 6
+        end_date = (e.aggregate(Max("date"))["date__max"] or timezone.now()).date()
+        start_date = start_date.replace(day=1)
+        end_date = end_date.replace(day=1)
+        # padding = (start_date.weekday() + 1) % 6
         days = defaultdict(list)
-        delta = end_date - start_date
+        # delta = end_date - start_date
         for dt in rrule(MONTHLY, dtstart=start_date, until=end_date):
             for day in Calendar(firstweekday=6).itermonthdates(dt.year, dt.month):
                 date = day
@@ -259,7 +263,18 @@ class SubjectTests(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["papers"] = Exam.objects.filter(subject=self.object, subject__user=self.request.user)
+        papers = Exam.objects.filter(subject=self.object, subject__user=self.request.user)
+        colour = self.object.colour
+        rgb = (int(colour[i:i + 2], 16)/255 for i in (0, 2, 4))
+        hls = colorsys.rgb_to_hls(*rgb)
+        step = (1-hls[1]) / len(papers)
+        colours = []
+        for i in np.arange(hls[1], 1, step):
+            c = colorsys.hls_to_rgb(hls[0], i, hls[2])
+            c = ("{:02x}" * 3).format(*(int(i*255) for i in c))
+            colours.append(c)
+
+        context["papers"] = zip(papers, colours)
         return context
 
 

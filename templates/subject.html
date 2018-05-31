@@ -9,10 +9,10 @@
 	</style>
 {% endblock %}
 {% block content %}
-	{% for paper in papers %}
+	{% for paper,colour in papers %}
 		<form action="{% url "exam" slug=paper.id %}">
 			<button class="subject">
-				<div id="colour" style="background: {{ "#"|add:paper.subject.colour }};"></div>
+				<div id="colour" style="background: {{ "#"|add:colour }};"></div>
 				{{ paper.paper }}
 			</button>
 		</form>

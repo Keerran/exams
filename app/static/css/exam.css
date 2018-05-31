@@ -52,3 +52,7 @@ tfoot input {
 tfoot input:focus {
     outline: 0;
 }
+
+#stats {
+    font-size: 24px;
+}

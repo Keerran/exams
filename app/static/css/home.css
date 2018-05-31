@@ -71,6 +71,9 @@
     border-right-color: #000000;
     margin-top: -7px;
 }
+b {
+    font-weight: 600                                                                                 ;
+}
 
 #statButtons {
     width: fit-content;
