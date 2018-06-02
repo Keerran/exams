@@ -2,8 +2,16 @@
 {% block title %}Timetable{% endblock %}
 {% block head %}
 	<style>
+		#month_slider.no-transition {
+			transition: none !important;
+		}
+
 		.other_month {
 			filter: brightness(50%);
+		}
+
+		#month_slider > :not(:first-child) {
+		    margin-left: 10px;
 		}
 
 		.day, .days {
@@ -105,6 +113,7 @@
 
 		#month-label p {
 			display: inline-block;
+			height: 1.5em;
 			font-size: 24px;
 			margin: 0;
 		}
@@ -158,42 +167,12 @@
             $(".day,.day-label").disableSelection();
         });
 	</script>
-{% endblock %}
-{% block selector %}'.days .exam_day'{% endblock %}
-{% block nullSelector %}'.True'{% endblock %}
-{% block body %}
-	<div class="days" aria-selected="false" aria-readonly="true">
-		<div id="month-label">
-			<button class="month-button prev" style="float: left" data-change="-1"><i class="material-icons">chevron_left</i></button>
-			<p id="selected-month"></p>
-			<button class="month-button next" style="float: right" data-change="+1"><i class="material-icons">chevron_right</i></button>
-		</div>
-		<div class="labels">
-			{% with "S M T W T F S" as weekdays %}
-				{% for weekday in weekdays.split %}
-					<div class="day-label" aria-readonly="true">{{ weekday }}</div>
-				{% endfor %}
-			{% endwith %}
-		</div>
-		<div id="months">
-			<div class="mask"></div>
-			<div id="month_slider">
-			{% for month, days in calendar.items %}
-				<div id="{{ month }}" class="month {% if month == cur_month %}current{% endif %}">
-				{% for day in days %}
-					<div aria-readonly="true" data-exams="{{ day.3 }}" class="day {{ day.4 }} {{ day.2 }}"
-					     style="{{ day.1 }}">{{ day.0 }}</div>
-				{% endfor %}
-				</div>
-			{% endfor %}
-			</div>
-		</div>
-	</div>
 	<script>
+
 		var month_names = ["January", "February", "March", "April", "May", "June",
                             "July", "August", "September", "October", "November", "December"]
 		function setCurrent() {
-		    $("#month_slider").css({"margin-left":(-$("#months .current").index()*415) + "px"});
+		    $("#month_slider").css({"margin-left":(-$("#months .current").index()*425) + "px"});
 		    $("#selected-month").text(month_names[$("#months .current")[0].id-1]);
 		    if($("#months .current").next().length == 0)
 		    {
@@ -211,6 +190,7 @@
 		    }
 		}
 		$(document).ready(function() {
+		    $("#month_slider").addClass("no-transition");
 			setCurrent()
 			$(".month-button").click(function() {
 			    if($(this).data("change") == 1)
@@ -249,6 +229,39 @@
 		                break;
                 }
             })
+			$("#month_slider")[0].offsetHeight
+			$("#month_slider").removeClass("no-transition");
 		});
 	</script>
+{% endblock %}
+{% block selector %}'.days .exam_day'{% endblock %}
+{% block nullSelector %}'.True'{% endblock %}
+{% block body %}
+	<div class="days" aria-selected="false" aria-readonly="true">
+		<div id="month-label">
+			<button class="month-button prev" style="float: left" data-change="-1"><i class="material-icons">chevron_left</i></button>
+			<p id="selected-month"></p>
+			<button class="month-button next" style="float: right" data-change="+1"><i class="material-icons">chevron_right</i></button>
+		</div>
+		<div class="labels">
+			{% with "S M T W T F S" as weekdays %}
+				{% for weekday in weekdays.split %}
+					<div class="day-label" aria-readonly="true">{{ weekday }}</div>
+				{% endfor %}
+			{% endwith %}
+		</div>
+		<div id="months">
+			<div class="mask"></div>
+			<div id="month_slider">
+			{% for month, days in calendar.items %}
+				<div id="{{ month }}" class="month {% if month == cur_month %}current{% endif %}">
+				{% for day in days %}
+					<div aria-readonly="true" data-exams="{{ day.3 }}" class="day {{ day.4 }} {{ day.2 }}"
+					     style="{{ day.1 }}">{{ day.0 }}</div>
+				{% endfor %}
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
 {% endblock %}

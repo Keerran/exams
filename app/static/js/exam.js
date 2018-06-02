@@ -12,6 +12,7 @@ $.ajaxSetup({
 
 function updateAvgs(data) {
     $("#avg_score").text(Math.round(data["avg_score"]) + " / " + data["max_score"]);
+    $("#avg_percentage").text(Math.round((data["avg_score"] / data["max_score"])*100) + "%");
     $("#avg_time").text(Math.round(data["avg_time"]));
 }
 

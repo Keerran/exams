@@ -13,7 +13,10 @@ p.fab_text {
     white-space: nowrap;
 }
 #masterfab {
-    transition: .3s;
+    overflow: hidden;
+}
+#masterfab i {
+    transition: .4s cubic-bezier(0.72, -0.35, 0.75, 0.15);
 }
 #masterfab p {
     right: 75px;
@@ -65,15 +68,40 @@ p.fab_text {
 }
 
 .fab.child {
-    right: calc(154px/3);
-    width: auto;
-    height: auto;
-    display: none;
-    opacity: 0;
+    right: calc(138px/3);
+    width: 50px;
+    height: 50px;
     font-size: 2em;
+    transform: scale(0);
 }
-#masterfab.open {
-	transform:rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
+
+.fab.child i {
+    font-size: 30px;
+}
+
+#masterfab.open i{
+    transition: .4s cubic-bezier(0.25, 1.15, 0.28, 1.35);
+	transform:rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.ripple {
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    position: absolute;
+    opacity: 1;
+}
+.rippleEffect {
+        animation: rippleDrop .6s linear;
+}
+
+@keyframes rippleDrop {
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
 }

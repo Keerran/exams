@@ -63,7 +63,8 @@
 		#sidebar > #mark {
 			margin-top: 20px
 		}
-		#sidebar > #date {
+		#sidebar > #date,
+		#sidebar > #time {
 			font-size: 2rem;
 		}
 
@@ -72,7 +73,7 @@
 			height: 500px;
 		}
 
-		#sidebar > #date span {
+		#sidebar > #time span {
 			position: relative;
 			top: -2px;
 		}
@@ -149,14 +150,17 @@
                         }
                         else {
                             $("#test_button").removeClass("none");
-	                        $("#mark").text("Avg Mark: " + tests[pk][0]);
+	                        $("#mark").text("Avg Mark: " + Math.round(tests[pk][0]) + " / " + exam["max_score"]);
+	                        $("#percent").text("Avg Percent: " + Math.round(tests[pk][0] * 100 / exam["max_score"]) + "%");
 		                    $("#mins").text("Avg Minutes Left: " + tests[pk][1]);
 	                    }
                         var date = moment.tz(exam["date"], exam["subject"][2][1]);
                         var start = date.format("HH[:]mm");
+                        var date_string = date.format("dddd, MMMM Do YYYY");
                         date.add(exam["duration"], "minutes");
                         var end = date.format("HH[:]mm");
-                        $("#date")
+                        $("#date").text(date_string);
+                        $("#time")
 	                        .text(start)
 	                        .append($("<span></span>")
 		                        .text(" \u2192 "))
@@ -177,6 +181,7 @@
                     return;
                 }
                 $("#sidebar").css({"margin-left": "-500px"});
+                $("#sidebar .collapse").collapse("hide");
                 $("#sidebar").removeClass("in");
             });
         });
@@ -194,9 +199,11 @@
 		<div id="subject"></div>
 		<div id="paper"></div>
 		<div id="date"></div>
+		<div id="time"></div>
 		<button id="test_button" class="btn collapsed" data-toggle="collapse" data-target="#test_data">Test Data</button>
 		<div id="test_data" class="collapse">
 			<div id="mark"></div>
+			<div id="percent"></div>
 			<div id="mins"></div>
 		</div>
 	</div>

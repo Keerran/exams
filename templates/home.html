@@ -18,7 +18,7 @@
         });
 
         function runClick(id, other) {
-            $("#timeframe").textContent = names[id];
+            $("#timeframe").text(names[id]);
             $("#" + id).addClass("visible");
             $("#" + id + "Button").addClass("visibleButton");
             $("#" + id + "Button").prop('disabled', true);

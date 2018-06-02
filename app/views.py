@@ -11,8 +11,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.db.models import Min, Max, Avg, F, Func, Q
-from django.db.models.functions import Coalesce
+from django.db import connection
+from django.db.models import Min, Max, Avg, F, Func, Q, Count, Window
+from django.db.models.expressions import Star
+from django.db.models.functions import Coalesce, RowNumber
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
@@ -139,10 +141,26 @@ class Timetable(View):
         filter_q = Q(exam=F("exam"))
         avg_score = Avg(F("score"), filter=filter_q)
         avg_mins = Avg(F("minutes_left"), filter=filter_q)
-        tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins) \
-            .values_list("exam", "avg_score", "avg_mins") \
-            .distinct()
-        tests = {x[0]: (x[1], x[2]) for x in tests}
+        # tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins) \
+        #     .values_list("exam", "avg_score", "avg_mins") \
+        #     .distinct()
+        #
+        # counts = Test.objects.annotate(cnt=Window(
+        #     expression=RowNumber(),
+        #     partition_by=[F("exam")]
+        # ))
+        # print(counts.query)
+        # print([c.cnt for c in counts])
+        # queries = list(connection.queries)
+        tests = Test.objects.values("exam").annotate(avg_score=Avg("score"), avg_mins=Avg("minutes_left"), num=Count("*"))
+        # with connection.cursor() as cursor:
+        #     cursor.execute("SELECT exam_id, COUNT(*) FROM app_test GROUP BY exam_id")
+        #     columns = [col[0] for col in cursor.description]
+        #     print([
+        #         dict(zip(columns, row))
+        #         for row in cursor.fetchall()
+        #     ])
+        tests = {x["exam"]: (x["avg_score"], x["avg_mins"], x["num"]) for x in tests}
         json_serializer = serializers.get_serializer("json")()
         month = datetime.date.today().month
         exams = json_serializer.serialize(e, ensure_ascii=False,

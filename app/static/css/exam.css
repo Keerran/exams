@@ -56,3 +56,13 @@ tfoot input:focus {
 #stats {
     font-size: 24px;
 }
+
+#stats div {
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+.label {
+    font-weight: 600;
+    margin-left: 20px;
+}

@@ -41,8 +41,11 @@
 		</tfoot>
 	</table>
 	<div id="stats" style="float: right;">
-		Average Score: <span id="avg_score">{{ avg_score|floatformat:"0" }} / {{ exam.max_score }}</span><br>
-		Average Time Left: <span id="avg_time">{{ avg_time|floatformat:"0" }}</span>
+		{% load app_tags %}
+		<div>Averages:</div>
+		<span class="label">Mark:</span> <span id="avg_score">{{ avg_score|floatformat:"0" }} / {{ exam.max_score }}</span><br>
+		<span class="label">Percentage:</span> <span id="avg_percentage">{{ avg_score|percent:exam.max_score }}%</span><br>
+		<span class="label">Time Left:</span> <span id="avg_time">{{ avg_time|floatformat:"0" }}</span>
 	</div>
 	</div>
 	{% csrf_token %}
