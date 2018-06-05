@@ -145,14 +145,14 @@
                         $("#subject").text(exam["subject"][0]);
                         $("#paper").text(exam["paper"]);
                         if(tests[pk] == undefined) {
-                            $("#test_button").addClass("none");
-                            $("#mark, #mins").text("");
+                            $("#test_button").addClass("none")
+                            $("#mark, #percent, #mins").text("");
                         }
                         else {
                             $("#test_button").removeClass("none");
 	                        $("#mark").text("Avg Mark: " + Math.round(tests[pk][0]) + " / " + exam["max_score"]);
 	                        $("#percent").text("Avg Percent: " + Math.round(tests[pk][0] * 100 / exam["max_score"]) + "%");
-		                    $("#mins").text("Avg Minutes Left: " + tests[pk][1]);
+		                    $("#mins").text("Avg Minutes Left: " + Math.round(tests[pk][1]))    ;
 	                    }
                         var date = moment.tz(exam["date"], exam["subject"][2][1]);
                         var start = date.format("HH[:]mm");
@@ -175,7 +175,7 @@
             if(nullSelector != "") {
                 nullSelector = "," + nullSelector
             }
-            $(document).click(function (e) {
+            $(document).click(function (event) {
                 if($(event.target).is("#sidebar, #sidebar *" + nullSelector))
                 {
                     return;

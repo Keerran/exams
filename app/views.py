@@ -5,6 +5,7 @@ import numpy as np
 from calendar import monthrange, Calendar
 from collections import defaultdict
 
+import pytz
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import MONTHLY, rrule
 from django.contrib.admin.views.decorators import staff_member_required
@@ -26,6 +27,12 @@ from django.views.generic import DetailView
 
 from app.forms import SignUpForm
 from app.models import Subject, Exam, Test
+
+
+def get_sidebar_data():
+    tests = Test.objects.values("exam").annotate(avg_score=Avg("score"), avg_mins=Avg("minutes_left"), num=Count("*"))
+    tests = {x["exam"]: (x["avg_score"], x["avg_mins"], x["num"]) for x in tests}
+    return json.dumps(dict(tests))
 
 
 class Signup(View):
@@ -50,23 +57,21 @@ def get_exam_data(exam):
     date = exam.date
     now = timezone.now()
     if now > date:
-        offset = 1
         relative = " ago"
         delta = (now - date)
     else:
-        offset = -1
         relative = " until"
         delta = (date - now)
     if delta.days != 0:
         relative = "<span><b>{0}</b></span><br> days".format(delta.days) + relative
         delta = "{d} days, {h} hours".format(
-            h=round(delta.seconds / 3600), d=delta.days
+            h=delta.seconds // 3600, d=delta.days
         )
     else:
         h, seconds = divmod(delta.seconds, 3600)
-        relative = "<span><b>{0}</b></span><br> hours".format(h + offset) + relative
+        relative = "<span><b>{0}</b></span><br> hours".format(h) + relative
         delta = "{h} hours, {m} minutes".format(
-            h=h + offset, m=round(seconds / 60)
+            h=h, m=seconds // 60
         )
     date = make_naive(date, exam.subject.user.timezone).strftime("%d %B %Y %H:%M")
     return exam, date, relative, delta
@@ -81,19 +86,12 @@ def home(request):
 
     d = [get_exam_data(exam) for exam in done]
     p = [get_exam_data(exam) for exam in pending]
-    filter_q = Q(exam=F("exam"))
-    avg_score = Avg(F("score"), filter=filter_q)
-    avg_mins = Avg(F("minutes_left"), filter=filter_q)
-    tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins)\
-                        .values_list("exam", "avg_score", "avg_mins")\
-                        .distinct()
-    tests = {x[0]: (x[1], x[2]) for x in tests}
 
     json_serializer = serializers.get_serializer("json")()
     exams = json_serializer.serialize(e, ensure_ascii=False,
                                       use_natural_foreign_keys=True,
                                       use_natural_primary_keys=True)
-    tests = json.dumps(dict(tests))
+    tests = get_sidebar_data()
     return render(request, template_name="home.html", context={
         "exams": exams,
         "done": d,
@@ -138,35 +136,12 @@ class Timetable(View):
                 if date.month != dt.month:
                     is_exam += " other_month"
                 days[dt.month].append((date.day, background, str(today), exams_js, is_exam))
-        filter_q = Q(exam=F("exam"))
-        avg_score = Avg(F("score"), filter=filter_q)
-        avg_mins = Avg(F("minutes_left"), filter=filter_q)
-        # tests = Test.objects.annotate(avg_score=avg_score, avg_mins=avg_mins) \
-        #     .values_list("exam", "avg_score", "avg_mins") \
-        #     .distinct()
-        #
-        # counts = Test.objects.annotate(cnt=Window(
-        #     expression=RowNumber(),
-        #     partition_by=[F("exam")]
-        # ))
-        # print(counts.query)
-        # print([c.cnt for c in counts])
-        # queries = list(connection.queries)
-        tests = Test.objects.values("exam").annotate(avg_score=Avg("score"), avg_mins=Avg("minutes_left"), num=Count("*"))
-        # with connection.cursor() as cursor:
-        #     cursor.execute("SELECT exam_id, COUNT(*) FROM app_test GROUP BY exam_id")
-        #     columns = [col[0] for col in cursor.description]
-        #     print([
-        #         dict(zip(columns, row))
-        #         for row in cursor.fetchall()
-        #     ])
-        tests = {x["exam"]: (x["avg_score"], x["avg_mins"], x["num"]) for x in tests}
         json_serializer = serializers.get_serializer("json")()
         month = datetime.date.today().month
         exams = json_serializer.serialize(e, ensure_ascii=False,
                                           use_natural_foreign_keys=True,
                                           use_natural_primary_keys=True)
-        tests = json.dumps(dict(tests))
+        tests = get_sidebar_data()
         return render(request, "timetable.html", context={
             "calendar": dict(days),
             "exams": exams,
@@ -207,7 +182,8 @@ class UpdateExam(View):
         pk = request.POST["pk"]
         paper = request.POST["paper"]
         dt = "{0} {1}".format(request.POST["date"], request.POST["time"])
-        dt = datetime.datetime.strptime(dt, "%Y/%m/%d %H:%M")
+        dt = datetime.datetime.strptime(dt, "%Y/%m/%d %H:%M",)
+        dt = request.user.timezone.localize(dt)
         max_score = request.POST["max_score"]
         duration = request.POST["duration"]
         Exam.objects.filter(pk=pk).update(subject=subject,

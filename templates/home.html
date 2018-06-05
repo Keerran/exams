@@ -7,6 +7,31 @@
 
 	<script>
 		names = {"pending": "Upcoming Exams", "done": "Finished Exams"}
+		function formatDelta(date, el)
+		{
+		    var now = moment();
+			var diff = moment.duration(date.diff(now));
+			var past = date < now
+			var days = Math.abs(diff.days()),
+				hours = Math.abs(diff.hours()),
+				minutes = Math.abs(diff.minutes()),
+				seconds = Math.abs(diff.seconds());
+			if(Math.floor(days) != 0)
+			{
+			    var interval = minutes*60 + seconds;
+			    el.find(".hover").text(days + " days, " + hours + " hours");
+				setTimeout(function() {formatDelta(date, el)}, interval * 1000)
+			}
+			else
+			{
+				var interval = seconds;
+				if(el.data("exams")[0] == 3) {
+                    console.log(interval);
+                }
+			    el.find(".hover").text(hours + " hours, " + minutes + " minutes");
+				setTimeout(function() {formatDelta(date, el)}, interval * 1000);
+			}
+		}
         $(function () {
 
             $(".exam > .date-info").hover(function () {
@@ -14,6 +39,22 @@
 
             }, function () {
                 $(".hover", $(this).parents(".exam")).css({"display": "none"});
+            });
+
+
+            $(".exam").each(function(index) {
+                var pk = $(this).data("exams")[0];
+	            var exam = undefined;
+                for(var e in exams)
+                {
+                    if(exams[e]["pk"] == pk)
+                    {
+                        exam = exams[e];
+                        break;
+                    }
+                }
+                var date = moment(exam.fields["date"]);
+				formatDelta(date, $(this));
             });
         });
 
@@ -31,52 +72,42 @@
 {% block body %}
 	<h1 id="timeframe">Upcoming Exams</h1>
 	<div id="statButtons">
-		<button id="pendingButton" onclick="runClick('pending','done')" disabled class="btn visibleButton">
-			Upcoming
-		</button>
+		<button id="pendingButton" onclick="runClick('pending','done')" disabled class="btn visibleButton">Upcoming</button>
 		<button id="doneButton" onclick="runClick('done','pending')" class="btn">Finished</button>
 	</div>
 	<div style="position: relative; margin:auto; width:600px;">
 		<div id="pending" class="exams visible" style="position:absolute">
-			{% for data in pending %}
-				{% with data.0 as exam %}
-					<div id="exam" data-exams="[{{ exam.id }}]" class="exam"
-					     style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
-						<div>
-							<div class="subject">{{ exam.subject.verbose_name }}</div>
-							<div class="paper">{{ exam.paper }}</div>
-						</div>
-						<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
-							{{ data.3 }}
-						</div>
-						<div class="date-info">
-							<div class="relative">{{ data.2|safe }}</div>
-
-							<div class="date">{{ data.1 }}</div>
-						</div>
+			{% for exam, date, relative, delta  in pending %}
+				<div id="exam" data-exams="[{{ exam.id }}]" class="exam" style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
+					<div>
+						<div class="subject">{{ exam.subject.verbose_name }}</div>
+						<div class="paper">{{ exam.paper }}</div>
 					</div>
-				{% endwith %}
+					<div class="hover" style="top:calc(111px / 2 - 20px);">
+					</div>
+					<div class="date-info">
+						<div class="relative">{{ relative|safe }}</div>
+
+						<div class="date">{{ date }}</div>
+					</div>
+				</div>
 			{% endfor %}
 		</div>
 		<div id="done" class="exams" style="position:absolute">
-			{% for data in done %}
-				{% with data.0 as exam %}
-					<div id="exam" data-exams="[{{ exam.id }}]" class="exam"
-					     style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
-						<div>
-							<div class="subject">{{ exam.subject.verbose_name }}</div>
-							<div class="paper">{{ exam.paper }}</div>
-						</div>
-						<div class="hover" style="right:-132px; top:calc(111px / 2 - 20px);">
-							{{ data.3 }}
-						</div>
-						<div class="date-info">
-							<div class="relative">{{ data.2|safe }}</div>
-
-							<div class="date">{{ data.1 }}</div>
-						</div>
+			{% for exam, date, relative, delta  in done %}
+				<div id="exam" data-exams="[{{ exam.id }}]" class="exam" style="position: relative; background: {{ "#"|add:exam.subject.colour }}">
+					<div>
+						<div class="subject">{{ exam.subject.verbose_name }}</div>
+						<div class="paper">{{ exam.paper }}</div>
 					</div>
-				{% endwith %}
+					<div class="hover" style="top:calc(111px / 2 - 20px);">
+					</div>
+					<div class="date-info">
+						<div class="relative">{{ relative|safe }}</div>
+
+						<div class="date">{{ date }}</div>
+					</div>
+				</div>
 			{% endfor %}
 		</div>
 	</div>

@@ -25,7 +25,7 @@
 		exams = exams["fields"];
 		$.each(exams, function(k, v) {
 		    if(k == "date") {
-		        var date = moment.tz(v, exams["subject"][2]).format("YYYY/MM/DD hh:mm").split(" ");
+		        var date = moment(v).format("YYYY/MM/DD hh:mm").split(" ");
 		        $("#date").val(date[0]);
 		        $("#time").val(date[1]);
 		        return;
